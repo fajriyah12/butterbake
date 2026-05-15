@@ -5,7 +5,7 @@
 
 <div class="page-header">
     <div class="container">
-                <h1 class="page-header-title">Your Basket</h1>
+        <h1 class="page-header-title">Your Basket</h1>
         <p class="page-header-subtitle">{{ $cart->items->count() }} item dalam keranjang</p>
     </div>
 </div>
@@ -17,7 +17,7 @@
                 <div class="empty-state-icon"><i class="fas fa-shopping-basket"></i></div>
                 <h3 class="empty-state-title">Keranjang Anda Kosong</h3>
                 <p class="empty-state-desc">Yuk mulai belanja dan temukan produk terbaik kami</p>
-                <a href="{{ route('catalog.index') }}" class="btn btn-primary btn-lg">
+                <a href="{{ route('catalog.index') }}" class="empty-cart-btn">
                     <i class="fas fa-bread-slice"></i> Mulai Belanja
                 </a>
             </div>
@@ -36,7 +36,11 @@
                         </div>
 
                         @foreach($cart->items as $item)
-                            <div class="cart-row">
+                            {{--
+                                Setiap baris diberi data-item-id agar JS bisa
+                                menemukan form UPDATE dan form DELETE dengan tepat
+                            --}}
+                            <div class="cart-row" data-item-id="{{ $item->id }}">
 
                                 {{-- Produk --}}
                                 <div class="cart-product">
@@ -60,16 +64,29 @@
                                     {{ $item->product->formatted_price }}
                                 </div>
 
-                                {{-- Quantity --}}
-                                <form method="POST" action="{{ route('cart.update', $item) }}">
+                                {{-- Quantity — form UPDATE --}}
+                                <form class="form-update"
+                                      method="POST"
+                                      action="{{ route('cart.update', $item) }}">
                                     @csrf
                                     @method('PATCH')
                                     <div class="quantity-selector" style="display:flex;align-items:center;">
-                                        <button type="button" class="qty-btn" onclick="dec(this)">−</button>
-                                        <input type="number" name="quantity" class="qty-input"
-                                               value="{{ $item->quantity }}" min="1" max="99"
-                                               onchange="this.form.submit()">
-                                        <button type="button" class="qty-btn" onclick="inc(this)">+</button>
+                                        {{-- Tombol − : kalau qty=1 akan trigger hapus --}}
+                                        <button type="button"
+                                                class="qty-btn"
+                                                onclick="handleDec(this)">−</button>
+
+                                        <input type="number"
+                                               name="quantity"
+                                               class="qty-input"
+                                               value="{{ $item->quantity }}"
+                                               min="0"
+                                               max="99"
+                                               readonly>
+
+                                        <button type="button"
+                                                class="qty-btn"
+                                                onclick="handleInc(this)">+</button>
                                     </div>
                                 </form>
 
@@ -78,8 +95,11 @@
                                     Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}
                                 </div>
 
-                                {{-- Hapus --}}
-                                <form method="POST" action="{{ route('cart.remove', $item) }}">
+                                {{-- Hapus — form DELETE, disembunyikan --}}
+                                <form class="form-delete"
+                                      method="POST"
+                                      action="{{ route('cart.remove', $item) }}"
+                                      style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -94,9 +114,8 @@
                             </div>
                         @endforeach
                     </div>
-                    
 
-                    <div style="margin-top:20px;display:flex;gap:12px;">
+                    <div style="margin-top:20px;">
                         <a href="{{ route('catalog.index') }}" class="btn btn-ghost">
                             <i class="fas fa-arrow-left"></i> Lanjut Belanja
                         </a>
@@ -107,7 +126,6 @@
                 <div class="cart-summary-box">
                     <h3 class="cart-summary-title">Ringkasan Pesanan</h3>
 
-                    {{-- Daftar item --}}
                     @foreach($cart->items as $item)
                         <div class="cart-summary-row">
                             <span>{{ Str::limit($item->product->name, 22) }} ×{{ $item->quantity }}</span>
@@ -115,22 +133,22 @@
                         </div>
                     @endforeach
 
-                    {{-- Ongkir --}}
                     <div class="cart-summary-row">
                         <span>Ongkir</span>
                         <span style="color:var(--amber);">Dihitung saat checkout</span>
                     </div>
 
-                    {{-- Total --}}
                     <div class="cart-summary-row total">
                         <span>Total Sementara</span>
                         <span>Rp {{ number_format($cart->total, 0, ',', '.') }}</span>
                     </div>
 
                     <a href="{{ route('checkout') }}"
-                    class="btn btn-primary btn-full btn-lg"
-                     style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;">Lanjut ke Checkout
-                     <i class="fas fa-arrow-right"></i></a>
+                       class="btn btn-primary btn-full btn-lg"
+                       style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                        Lanjut ke Checkout
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
 
                     <div style="margin-top:16px;text-align:center;font-size:.8rem;color:var(--text-light);">
                         <i class="fas fa-shield-alt" style="color:var(--amber)"></i>
@@ -145,20 +163,45 @@
 
 @push('scripts')
 <script>
-function dec(btn) {
-    const input = btn.parentElement.querySelector('input');
-    const val = parseInt(input.value);
+/**
+ * Tombol KURANG ( − )
+ * Logika:
+ *   qty > 1  → kurangi qty lalu submit form update
+ *   qty = 1  → langsung submit form delete (hapus item dari keranjang)
+ */
+function handleDec(btn) {
+    // Naik ke .cart-row yang punya data-item-id
+    const row        = btn.closest('.cart-row');
+    const formUpdate = row.querySelector('.form-update');
+    const formDelete = row.querySelector('.form-delete');
+    const input      = formUpdate.querySelector('.qty-input');
+
+    let val = parseInt(input.value);
+
     if (val > 1) {
+        // Kurangi qty → update
         input.value = val - 1;
-        input.form.submit();
+        formUpdate.submit();
+    } else {
+        // qty = 1 → tekan − → hapus langsung
+        formDelete.submit();
     }
 }
-function inc(btn) {
-    const input = btn.parentElement.querySelector('input');
-    const val = parseInt(input.value);
+
+/**
+ * Tombol TAMBAH ( + )
+ * Tambah qty lalu submit form update.
+ */
+function handleInc(btn) {
+    const row        = btn.closest('.cart-row');
+    const formUpdate = row.querySelector('.form-update');
+    const input      = formUpdate.querySelector('.qty-input');
+
+    let val = parseInt(input.value);
+
     if (val < 99) {
         input.value = val + 1;
-        input.form.submit();
+        formUpdate.submit();
     }
 }
 </script>

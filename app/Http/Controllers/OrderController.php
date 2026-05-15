@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -16,7 +17,7 @@ class OrderController extends Controller
         $this->middleware('auth');
     }
 
-    public function checkout()
+        public function checkout()
     {
         $cart = Cart::where('user_id', Auth::id())
             ->with('items.product')
@@ -29,55 +30,89 @@ class OrderController extends Controller
         return view('checkout.checkout', compact('cart'));
     }
 
-    public function payment(Request $request)
-    {
-        $request->validate([
-            'delivery_method'      => 'required|in:pickup,delivery',
-            'delivery_address'     => 'required_if:delivery_method,delivery|nullable|string',
-            'delivery_city'        => 'required_if:delivery_method,delivery|nullable|string',
-            'delivery_postal_code' => 'required_if:delivery_method,delivery|nullable|string',
-            'pickup_date'          => 'required_if:delivery_method,pickup|nullable|date',
-            'notes'                => 'nullable|string|max:500',
-        ]);
+   public function payment(Request $request)
+{
 
-        session(['checkout_data' => $request->all()]);
+    if ($request->has('product_id')) {
 
-        $cart = Cart::where('user_id', Auth::id())->with('items.product')->first();
+        $product = Product::findOrFail($request->product_id);
 
-        return view('payment.payment', compact('cart'));
+        // buat cart sementara agar view payment tetap berjalan normal
+        $cart = new \stdClass();
+
+        $item = new \stdClass();
+        $item->product = $product;
+        $item->quantity = $request->quantity ?? 1;
+
+        $cart->items = collect([$item]);
+
+        return view('checkout.payment', compact('cart'));
     }
+
+    $request->validate([
+        'delivery_method' => 'required|in:pickup,delivery',
+        'pickup_date'     => 'nullable|string',
+        'notes'           => 'nullable|string|max:500',
+    ]);
+
+    // Simpan data checkout ke session
+    session(['checkout_data' => $request->except('_token')]);
+
+    $cart = Cart::where('user_id', Auth::id())
+        ->with('items.product')
+        ->first();
+
+    if (!$cart || $cart->items->isEmpty()) {
+        return redirect()->route('cart.index')
+            ->with('error', 'Keranjang Anda kosong.');
+    }
+
+    return view('checkout.payment', compact('cart'));
+}
 
     public function placeOrder(Request $request)
     {
         $request->validate([
             'payment_method' => 'required|string',
+        ], [
+            'payment_method.required' => 'Pilih salah satu metode pembayaran.',
         ]);
 
         $cart     = Cart::where('user_id', Auth::id())->with('items.product')->first();
-        $checkout = session('checkout_data');
+        $checkout = session('checkout_data', []);
 
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Keranjang kosong.');
         }
 
         DB::transaction(function () use ($cart, $checkout, $request) {
+
             $subtotal    = $cart->items->sum(fn($i) => $i->product->price * $i->quantity);
-            $deliveryFee = ($checkout['delivery_method'] === 'delivery') ? 15000 : 0;
+            $tax         = $subtotal * 0.1;
+            $deliveryFee = 0; 
+            $total       = $subtotal + $tax;
 
             $order = Order::create([
                 'user_id'              => Auth::id(),
                 'order_number'         => Order::generateOrderNumber(),
                 'status'               => 'pending',
-                'delivery_method'      => $checkout['delivery_method'],
-                'delivery_address'     => $checkout['delivery_address'] ?? null,
-                'delivery_city'        => $checkout['delivery_city'] ?? null,
-                'delivery_postal_code' => $checkout['delivery_postal_code'] ?? null,
-                'pickup_date'          => $checkout['pickup_date'] ?? null,
+
+               
+                'delivery_method'      => $checkout['delivery_method']      ?? 'pickup',
+                'delivery_address'     => $checkout['delivery_address']      ?? null,
+                'delivery_city'        => $checkout['delivery_city']         ?? null,
+                'delivery_postal_code' => $checkout['delivery_postal_code']  ?? null,
+
+
+                'pickup_date'          => now(),
                 'subtotal'             => $subtotal,
                 'delivery_fee'         => $deliveryFee,
-                'total'                => $subtotal + $deliveryFee,
+                'total'                => $total,
+
+     
                 'payment_method'       => $request->payment_method,
-                'payment_status'       => 'paid',
+                'payment_status'       => 'unpaid',
+
                 'notes'                => $checkout['notes'] ?? null,
             ]);
 
@@ -93,6 +128,8 @@ class OrderController extends Controller
             }
 
             $cart->items()->delete();
+            $cart->update(['total' => 0]);
+
             session()->forget('checkout_data');
             session(['last_order_id' => $order->id]);
         });
@@ -100,21 +137,25 @@ class OrderController extends Controller
         return redirect()->route('order.confirmation');
     }
 
+
     public function confirmation()
     {
         $orderId = session('last_order_id');
+
         if (!$orderId) {
             return redirect()->route('home');
         }
 
-        $order = Order::with('items.product')->findOrFail($orderId);
-        return view('pages.order-confirmation', compact('order'));
+        $order = Order::with('items')->findOrFail($orderId);
+
+        return view('order.confirmation', compact('order'));
     }
+
 
     public function myOrders()
     {
         $orders = Order::where('user_id', Auth::id())
-            ->with('items.product')
+            ->with('items')
             ->latest()
             ->paginate(10);
 

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,6 +39,8 @@
         @include('components.footer')
 
     </div>
+
+    @stack('scripts')
 
 </body>
 

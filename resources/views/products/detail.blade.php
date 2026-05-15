@@ -9,7 +9,7 @@
     <div class="container">
         <div class="breadcrumb">
 
-           <span>Katalog</span>
+           <a href="/catalog">Katalog</a>
            <span>/</span>
            <span>{{ $product->category->name }}</span>
            <span>/</span>
@@ -122,97 +122,127 @@
 
                 </div>
 
-                {{-- BUY BOX --}}
-                @if($product->stock > 0)
+ {{-- BUY BOX --}}
+@if($product->stock > 0)
 
-                <div class="buy-box">
+    @if(session('success'))
+        <div class="success-popup" id="successPopup">
+            <i class="fas fa-check-circle"></i>
+            {{ session('success') }}
+        </div>
+    @endif
+    <script>
+    setTimeout(() => {
+    document.getElementById('successPopup').remove();
+    }, 2000);
+    </script>
 
-                    <form method="POST"
-                          action="{{ route('cart.add') }}">
+    <div class="buy-box">
 
-                        @csrf
+       {{-- ADD TO CART --}}
+<form method="POST"
+      action="{{ route('cart.add') }}">
 
-                        <input type="hidden"
-                               name="product_id"
-                               value="{{ $product->id }}">
+    @csrf
 
-                        <div class="buy-top" style="display:flex;
-                           justify-content:space-between;
-                           align-items:center;
-                           gap:30px;">
+    <input type="hidden"
+           name="product_id"
+           value="{{ $product->id }}">
 
-                            <div>
+    <div class="buy-top"
+         style="display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:30px;">
 
-                                <div class="buy-label">
-                                    QUANTITY
-                                </div>
+        <div>
 
-                                <div class="quantity-selector">
+            <div class="buy-label">
+                QUANTITY
+            </div>
 
-                                    <button type="button"
-                                            class="qty-btn"
-                                            onclick="changeQty(-1)">
-                                        −
-                                    </button>
+            <div class="quantity-selector">
 
-                                    <input type="number"
-                                           name="quantity"
-                                           id="qtyInput"
-                                           class="qty-input"
-                                           value="1"
-                                           min="1"
-                                           max="{{ $product->stock }}"
-                                           readonly>
+                <button type="button"
+                        class="qty-btn"
+                        onclick="changeQty(-1)">
+                    −
+                </button>
 
-                                    <button type="button"
-                                            class="qty-btn"
-                                            onclick="changeQty(1)">
-                                        +
-                                    </button>
+                <input type="number"
+                       name="quantity"
+                       id="qtyInput"
+                       class="qty-input"
+                       value="1"
+                       min="1"
+                       max="{{ $product->stock }}"
+                       readonly>
 
-                                </div>
+                <button type="button"
+                        class="qty-btn"
+                        onclick="changeQty(1)">
+                    +
+                </button>
 
-                            </div>
+            </div>
 
-                            <div class="subtotal-box">
+        </div>
 
-                                <div class="buy-label">
-                                    SUB-TOTAL
-                                </div>
+        <div class="subtotal-box">
 
-                                <h3>
-                                    {{ $product->formatted_price }}
-                                </h3>
+            <div class="buy-label">
+                SUB-TOTAL
+            </div>
 
-                            </div>
+            <h3>
+                {{ $product->formatted_price }}
+            </h3>
 
-                        </div>
+        </div>
 
-                        <div class="buy-actions">
+    </div>
 
-                            <a href="{{ route('cart.add') }}">
-                            <button type="submit"
-                                    class="btn-cart">
+    <div class="buy-actions">
 
-                                Add to Cart
+        {{-- ADD TO CART --}}
+        <button type="submit"
+                class="btn-cart">
 
-                            </button>
+            Add to Cart
 
-                            <a href="{{ route('checkout.payment') }}">
-                            <button type="button"
-                                    class="btn-buy">
+        </button>
 
-                                Buy Now
+</form>
 
-                            </button>
 
-                        </div>
+{{-- BUY NOW --}}
+<form action="{{ route('checkout.payment') }}"
+      method="POST">
 
-                    </form>
+    @csrf
 
-                </div>
+    <input type="hidden"
+           name="product_id"
+           value="{{ $product->id }}">
 
-                @endif
+    <input type="hidden"
+           name="quantity"
+           id="buyQty"
+           value="1">
+
+    <button type="submit"
+            class="btn-buy">
+
+        Buy Now
+
+    </button>
+
+</form>
+
+</div>
+
+@endif
+               
 
                 {{-- EXTRA --}}
                 <div class="product-extra">
@@ -258,9 +288,9 @@
                     <span class="section-label">Produk Lainnya</span>
                     <h2 class="section-title" style="font-size:2rem;">Mungkin Anda Suka</h2>
                 </div>
-                <div class="products-grid">
+                <div class="products-grid related-grid">
                     @foreach($related as $rel)
-                        <div class="product-card">
+                        <div class="related-product-card">
                             <a href="{{ route('catalog.show', $rel->slug) }}" class="product-card-image" style="display:block;">
                                 <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&q=80" alt="{{ $rel->name }}">
                             </a>

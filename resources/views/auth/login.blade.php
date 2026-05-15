@@ -103,19 +103,6 @@
 
             </div>
 
-            <!-- REMEMBER -->
-            <div class="remember-box">
-
-                <label>
-
-                    <input type="checkbox" name="remember">
-
-                    Remember this device
-
-                </label>
-
-            </div>
-
             <!-- BUTTON -->
             <button type="submit" class="login-btn">
 
@@ -136,19 +123,6 @@
 
                 Create an Account
 
-            </a>
-
-        </div>
-
-        <!-- BOTTOM -->
-        <div class="login-bottom">
-
-            <a href="#">
-                PRIVACY POLICY
-            </a>
-
-            <a href="#">
-                TERMS OF USE
             </a>
 
         </div>
