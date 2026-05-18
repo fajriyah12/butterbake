@@ -105,8 +105,7 @@
 
             <!-- LOGIN ADMIN -->
             <div class="admin-login-link">
-
-                <a href="{{ route('admin.login') }}">
+                <a href="{{ route('admin.login') }}" class="admin-login-btn">
                     Login as Admin
                 </a>
 
@@ -123,19 +122,6 @@
 
             <a href="{{ route('signup') }}" class="create-btn">
                 Create an Account
-            </a>
-
-        </div>
-
-        <!-- BOTTOM -->
-        <div class="login-bottom">
-
-            <a href="#">
-                PRIVACY POLICY
-            </a>
-
-            <a href="#">
-                TERMS OF USE
             </a>
 
         </div>

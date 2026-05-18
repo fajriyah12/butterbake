@@ -27,7 +27,7 @@ class ProductController extends Controller
             default      => $query->latest(),
         };
 
-        $products   = $query->paginate(12);
+        $products   = $query->paginate(6);
         $categories = Category::where('is_active', true)->get();
 
         return view('products.katalog', compact('products', 'categories'));

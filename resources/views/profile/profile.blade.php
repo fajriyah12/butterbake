@@ -16,7 +16,7 @@
                 <span>Profile</span>
             </a>
 
-            <a href="#" class="profile-menu">
+            <a href="{{ route('order.myorders') }}"  class="profile-menu">
                 <i class="fas fa-box"></i>
                 <span>Orders</span>
             </a>
@@ -51,9 +51,9 @@
 
                 <h2>Personal Information</h2>
 
-                <a href="#">
-                    <i class="fas fa-pen"></i>
-                    Edit Details
+                <a href="{{ route('profile.edit') }}">
+                <i class="fas fa-pen"></i>
+                Edit Details
                 </a>
 
             </div>

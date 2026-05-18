@@ -6,51 +6,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    // =====================
-    // SHOW LOGIN
-    // =====================
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    // =====================
-    // SHOW SIGNUP
-    // =====================
     public function showSignup()
     {
         return view('auth.signup');
     }
 
-    // =====================
-    // SIGNUP
-    // =====================
     public function signup(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
+            'phone' => 'nullable|string|max:20',
+            'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
             'role' => 'user'
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('home');
+        return redirect()->route('home')
+            ->with('success', 'Selamat datang, ' . $user->name);
     }
 
-    // =====================
-    // LOGIN
-    // =====================
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -62,8 +54,9 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            // cek role admin
-            if (Auth::user()->role === 'admin') {
+            $user = Auth::user();
+
+            if ($user && $user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
 
@@ -75,15 +68,11 @@ class AuthController extends Controller
         ])->withInput();
     }
 
-    // =====================
-    // LOGOUT
-    // =====================
     public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect()->route('login');

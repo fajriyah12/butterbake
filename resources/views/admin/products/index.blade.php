@@ -1,26 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-
 <div class="admin-main">
 
     <!-- TOPBAR -->
     <div class="topbar">
-
         <div class="inventory-header">
-            <h1>Product Inventory</h1>
-            <p class="inventory-subtitle">Showing all your artisanal creations</p>
-        </div>
-
-        <div class="topbar-right">
-            <button class="icon-btn"><i class="bi bi-bell"></i></button>
-            <button class="icon-btn"><i class="bi bi-gear"></i></button>
-            <img src="{{ auth()->user()->avatar ?? 'https://i.pravatar.cc/40' }}" class="topbar-avatar" alt="Admin">
+            <div>
+                <h1>Product Inventory</h1>
+                <p class="inventory-subtitle">Showing all your artisanal creations</p>
+            </div>
             <a href="{{ route('admin.products.create') }}" class="new-product-btn">
-                + New Product
+                <i class="bi bi-plus-lg"></i> New Product
             </a>
         </div>
-
     </div>
 
     <!-- FILTER -->
@@ -130,14 +123,12 @@
             Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} products
         </span>
         <div class="pagination-links">
-            {{-- Prev --}}
             @if($products->onFirstPage())
                 <span class="page-btn disabled"><i class="bi bi-chevron-left"></i></span>
             @else
                 <a href="{{ $products->previousPageUrl() }}" class="page-btn"><i class="bi bi-chevron-left"></i></a>
             @endif
 
-            {{-- Pages --}}
             @foreach(range(1, $products->lastPage()) as $page)
                 <a href="{{ $products->url($page) }}"
                    class="page-btn {{ $products->currentPage() == $page ? 'active' : '' }}">
@@ -145,7 +136,6 @@
                 </a>
             @endforeach
 
-            {{-- Next --}}
             @if($products->hasMorePages())
                 <a href="{{ $products->nextPageUrl() }}" class="page-btn"><i class="bi bi-chevron-right"></i></a>
             @else
@@ -155,5 +145,4 @@
     </div>
 
 </div>
-
 @endsection

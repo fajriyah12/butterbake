@@ -35,11 +35,13 @@ class AdminProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'category_id' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'name'         => 'required',
+            'category_id'  => 'required',
+            'price'        => 'required|numeric',
+            'stock'        => 'required|integer',
+            'image'        => 'nullable|image|mimes:jpg,png,jpeg',
+            'rating'       => 'nullable|numeric|min:0|max:5',
+            'review_count' => 'nullable|integer|min:0',
         ]);
 
         $imagePath = null;
@@ -49,16 +51,18 @@ class AdminProductController extends Controller
         }
 
         Product::create([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'ingredients' => $request->ingredients,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'image' => $imagePath,
-            'is_featured' => $request->has('is_featured'),
-            'is_active' => $request->has('is_active'),
+            'category_id'  => $request->category_id,
+            'name'         => $request->name,
+            'slug'         => Str::slug($request->name),
+            'description'  => $request->description,
+            'ingredients'  => $request->ingredients,
+            'price'        => $request->price,
+            'stock'        => $request->stock,
+            'image'        => $imagePath,
+            'is_featured'  => $request->has('is_featured'),
+            'is_active'    => $request->has('is_active'),
+            'rating'       => $request->rating ?? 0,
+            'review_count' => $request->review_count ?? 0,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -75,34 +79,35 @@ class AdminProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name' => 'required',
-            'category_id' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'name'         => 'required',
+            'category_id'  => 'required',
+            'price'        => 'required|numeric',
+            'stock'        => 'required|integer',
+            'image'        => 'nullable|image|mimes:jpg,png,jpeg',
+            'rating'       => 'nullable|numeric|min:0|max:5',
+            'review_count' => 'nullable|integer|min:0',
         ]);
 
         if ($request->hasFile('image')) {
-
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-
-            $imagePath = $request->file('image')->store('products', 'public');
-            $product->image = $imagePath;
+            $product->image = $request->file('image')->store('products', 'public');
         }
 
         $product->update([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'ingredients' => $request->ingredients,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'image' => $product->image,
-            'is_featured' => $request->has('is_featured'),
-            'is_active' => $request->has('is_active'),
+            'category_id'  => $request->category_id,
+            'name'         => $request->name,
+            'slug'         => Str::slug($request->name),
+            'description'  => $request->description,
+            'ingredients'  => $request->ingredients,
+            'price'        => $request->price,
+            'stock'        => $request->stock,
+            'image'        => $product->image,
+            'is_featured'  => $request->has('is_featured'),
+            'is_active'    => $request->has('is_active'),
+            'rating'       => $request->rating ?? $product->rating,
+            'review_count' => $request->review_count ?? $product->review_count,
         ]);
 
         return redirect()->route('admin.products.index')

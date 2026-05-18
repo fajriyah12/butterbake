@@ -84,6 +84,21 @@
 
             </div>
 
+            {{-- PHONE NUMBER --}}
+            <div class="form-group">
+
+                <label class="form-label">
+                PHONE NUMBER
+                </label>
+
+                <input type="text"
+                       name="phone"
+                       class="form-control"
+                       placeholder="Masukkan Nomor Telepon"
+                       value="{{ old('phone') }}"
+                       required>
+             </div>
+
             <!-- PASSWORD -->
             <div class="signup-group">
 
@@ -140,19 +155,6 @@
 
             </div>
 
-            <!-- REMEMBER -->
-            <div class="remember-box">
-
-                <label>
-
-                    <input type="checkbox">
-
-                    Remember this device
-
-                </label>
-
-            </div>
-
             <!-- BUTTON -->
             <button type="submit" class="signup-btn">
 
@@ -176,20 +178,7 @@
             </a>
 
         </div>
-
-        <!-- BOTTOM -->
-        <div class="signup-bottom">
-
-            <a href="#">
-                PRIVACY POLICY
-            </a>
-
-            <a href="#">
-                TERMS OF USE
-            </a>
-
-        </div>
-
+    
     </div>
 
 </div>

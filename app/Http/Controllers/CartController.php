@@ -30,6 +30,12 @@ class CartController extends Controller
             $cart = Cart::where('user_id', Auth::id())
                 ->with('items.product.category')
                 ->first();
+
+            if (!$cart) {    
+                $cart = new Cart();
+                $cart->setRelation('items', collect());
+            }
+                
         } else {
             // Kalau belum login, tampilkan keranjang kosong
             $cart = new Cart();
@@ -110,7 +116,7 @@ class CartController extends Controller
 
         $item->delete();
 
-        return redirect()->back()->with('success', 'Item berhasil dihapus dari keranjang.');
+        return redirect()->route('cart.index')->with('success', 'Item berhasil dihapus dari keranjang.');
     }
 
     /**

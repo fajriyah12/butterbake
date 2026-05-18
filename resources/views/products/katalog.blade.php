@@ -6,24 +6,16 @@
 <div class="page-header">
     <div class="container">
         <div class="page-header-inner">
-           
-                <h1 class="page-header-title">Our Heritage Collection</h1>
-                <p  class="page-header-subtitle"> Slow-fermented breads, hand-laminated pastries, and heirloom cakes baked
-                  daily in our stone ovens using grains from local family farms.</p>
-                
-            {{-- Search --}}
-            <form method="GET" action="{{ route('catalog.index') }}" style="display:flex;gap:10px;align-items:center;">
-                @if(request('category'))<input type="hidden" name="category" value="{{ request('category') }}">@endif
-                <div class="search-bar" style="margin-bottom:0;width:280px;">
-                    <i class="fas fa-search"></i>
-                    <input type="text" name="search" placeholder="Cari produk..." value="{{ request('search') }}">
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm">Cari</button>
-            </form>
-        </div>
-    </div>
-</div>
 
+            <h1 class="page-header-title">
+                Our Heritage Collection
+            </h1>
+
+            <p class="page-header-subtitle">
+                Slow-fermented breads, hand-laminated pastries, and heirloom cakes baked
+                daily in our stone ovens using grains from local family farms.
+            </p>
+                  
 <div class="section" style="padding-top:48px;">
     <div class="container">
         <div class="catalog-layout">
@@ -68,7 +60,15 @@
                         <a href="{{ route('catalog.index') }}" class="btn btn-primary">Lihat Semua</a>
                     </div>
                 @else
-                    <div class="products-grid">
+
+                @if(session('success'))
+                <div id="popup-alert" class="popup-alert">
+                <i class="fas fa-check-circle"></i>
+                {{ session('success') }}
+                </div>
+                @endif
+                
+                    <div class="products-grid catalog-grid">
                         @foreach($products as $product)
                             <div class="product-card">
                                 <a href="{{ route('catalog.show', $product->slug) }}" class="product-card-image" style="display:block;">
@@ -103,6 +103,7 @@
                                             <button type="submit" class="btn btn-primary btn-sm">
                                                 <i class="fas fa-plus">ADD TO BASKET</i>
                                             </button>
+                                           
                                         </form>
                                     </div>
                                 </div>
@@ -135,5 +136,16 @@
         </div>
     </div>
 </div>
+<script>
+        setTimeout(() => {
+            const popup = document.getElementById('popup-alert');
+            if (popup) {
+                popup.style.transition = '0.4s';
+                popup.style.opacity = '0';
+                popup.style.transform = 'translateY(-10px)';
 
+                setTimeout(() => popup.remove(), 400);
+            }
+        }, 2500);
+    </script>
 @endsection

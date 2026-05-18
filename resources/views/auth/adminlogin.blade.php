@@ -103,14 +103,11 @@
                 Login as Admin
             </button>
 
-            <!-- BACK USER LOGIN -->
-            <div class="admin-login-link">
-
-                <a href="{{ route('login') }}">
-                    Back to User Login
-                </a>
-
-            </div>
+           <div class="admin-login-link">
+    <a href="{{ route('login') }}" class="admin-login-btn">
+        Back to User Login
+    </a>
+</div>
 
         </form>
 

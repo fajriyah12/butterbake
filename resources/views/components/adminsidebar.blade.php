@@ -2,8 +2,15 @@
 
     <div>
 
-        <div class="sidebar-logo">
-            Butter Bake
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-logo">
+                <img src="{{ asset('images/butterbake.png')}}" alt ="butter bake">
+            </div>
+
+            <div class="sidebar-brand-text">
+                <div class="logo">Butter Bake</div>
+                <div class="logo-sub">Admin</div>
+            </div>
         </div>
 
         <nav class="menu">
@@ -20,13 +27,13 @@
                 Products
             </a>
 
-            <a href="#"
+            <a href="{{ route('admin.customers.index') }}"
                class="{{ request()->is('admin/customers*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i>
                 Customers
             </a>
 
-            <a href="#"
+            <a href="{{ route('admin.orders.index') }}"
                class="{{ request()->is('admin/orders*') ? 'active' : '' }}">
                 <i class="bi bi-bag"></i>
                 Orders
@@ -44,4 +51,14 @@
         </button>
     </form>
 
+</div>
+
+{{-- GLOBAL TOPBAR --}}
+<div class="global-topbar">
+
+    <div class="dash-topbar-right">
+        <button class="icon-btn"><i class="bi bi-bell"></i></button>
+        <button class="icon-btn"><i class="bi bi-gear"></i></button>
+        <button class="logo-btn" disabled><img src="{{ asset('images/butterbake.png') }}" alt="Butter Bake"></button>
+    </div>
 </div>
