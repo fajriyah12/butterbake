@@ -16,7 +16,7 @@
                 <span>Profile</span>
             </a>
 
-            <a href="{{ route('order.confirmation') }}"  class="profile-menu">
+            <a href="{{ route('order.myorders') }}"  class="profile-menu">
                 <i class="fas fa-box"></i>
                 <span>Orders</span>
             </a>

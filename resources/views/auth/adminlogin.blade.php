@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login — Butter Bake</title>
+    <title>Admin Login — Butter Bake</title>
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
@@ -27,11 +27,11 @@
 
         <!-- TITLE -->
         <h2 class="login-title">
-            Welcome Back
+            Admin Access
         </h2>
 
         <p class="login-subtitle">
-            Sign in to your bakery account to manage your orders.
+            Sign in to manage products, orders, and bakery operations.
         </p>
 
         <!-- ERROR -->
@@ -44,7 +44,7 @@
         @endif
 
         <!-- FORM -->
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('admin.login.submit') }}">
 
             @csrf
 
@@ -52,13 +52,13 @@
             <div class="login-group">
 
                 <label>
-                    EMAIL ADDRESS
+                    ADMIN EMAIL
                 </label>
 
                 <input
                     type="email"
                     name="email"
-                    placeholder="Masukkan Email Anda"
+                    placeholder="Masukkan Email Admin"
                     value="{{ old('email') }}"
                     required
                 >
@@ -100,16 +100,14 @@
 
             <!-- BUTTON -->
             <button type="submit" class="login-btn">
-                Login
+                Login as Admin
             </button>
 
-            <!-- LOGIN ADMIN -->
-            <div class="admin-login-link">
-                <a href="{{ route('admin.login') }}" class="admin-login-btn">
-                    Login as Admin
-                </a>
-
-            </div>
+           <div class="admin-login-link">
+    <a href="{{ route('login') }}" class="admin-login-btn">
+        Back to User Login
+    </a>
+</div>
 
         </form>
 
@@ -117,11 +115,20 @@
         <div class="login-footer">
 
             <p>
-                Don't have an account yet?
+                Admin panel access only
             </p>
 
-            <a href="{{ route('signup') }}" class="create-btn">
-                Create an Account
+        </div>
+
+        <!-- BOTTOM -->
+        <div class="login-bottom">
+
+            <a href="#">
+                PRIVACY POLICY
+            </a>
+
+            <a href="#">
+                TERMS OF USE
             </a>
 
         </div>

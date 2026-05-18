@@ -41,12 +41,17 @@ class Order extends Model
     public function getStatusLabelAttribute(): string
     {
         return match($this->status) {
-            'pending'    => 'Menunggu Konfirmasi',
-            'processing' => 'Sedang Diproses',
-            'ready'      => 'Siap Diambil',
-            'completed'  => 'Selesai',
-            'cancelled'  => 'Dibatalkan',
+            'pending'    => 'Pending',
+            'processing' => 'Processing',
+            'ready'      => 'Ready',
+            'completed'  => 'Completed',
+            'cancelled'  => 'Cancelled',
             default      => ucfirst($this->status),
         };
+    }
+
+    public function orders()
+    {
+    return $this->hasMany(Order::class);
     }
 }
