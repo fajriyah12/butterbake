@@ -37,12 +37,17 @@ h1,h2,h3,h4,.logo{font-family:'Cormorant Garamond',serif;}
 .hero-content p,.process-description,.step-content p,.pickup-card p{color:#6b625c;font-size:18px;line-height:1.8;}
 
 .year-badge{display:inline-block;padding:12px 28px;border-radius:30px;background:#ebcfb5;margin-bottom:35px;}
+.hero-buttons {display: flex;flex-direction: row;align-items: center;gap: 16px;margin-top: 40px}
+.hero-btn-primary,
+.hero-btn-secondary {display: inline-flex !important;align-items: center !important;justify-content: center !important;width: auto !important;min-width: 140px !important;height: auto !important;padding: 14px 28px !important;border-radius: 10px !important;font-size: 13px !important;font-weight: 600 !important;letter-spacing: 0.08em !important;text-transform: uppercase !important;text-decoration: none !important;cursor: pointer !important;transition: background 0.2s, transform 0.1s !important;}
 
-.hero-buttons{gap:20px;margin-top:40px;}
+.hero-btn-primary {background: #9b642f !important;color: white !important;border: 1px solid #9b642f !important;}
 
-.btn-primary,.btn-secondary,.process-btn{padding:22px 42px;border-radius:12px;font-size:18px;}
-.btn-primary,.process-btn{background:#9b642f;color:white;}
-.btn-secondary{border:1px solid #c8a37e;color:#8a5a2f;}
+.hero-btn-primary:hover {background: #7d4f24 !important;color: white !important;transform: translateY(-1px) !important;}
+
+.hero-btn-secondary {background: transparent !important;color: #8a5a2f !important;border: 1px solid #c8a37e !important;}
+
+.hero-btn-secondary:hover {background: #f5ede6 !important;color: #8a5a2f !important;transform: translateY(-1px) !important;}
 
 .hero-image img{width:430px;height:500px;border-radius:28px;}
 .process-image{height:760px;border-radius:34px;}

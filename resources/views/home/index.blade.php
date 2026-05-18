@@ -16,10 +16,10 @@
             of traditional techniques.
         </p>
         <div class="hero-buttons">
-            <a href="{{ auth()->check() ? route('catalog.index') : route('login') }}" class="btn-primary">
+            <a href="{{ auth()->check() ? route('catalog.index') : route('login') }}" class="hero-btn-primary">
                 ORDER ONLINE
             </a>
-            <a href="{{ route('catalog.index') }}" class="btn-secondary">
+            <a href="{{ route('catalog.index') }}" class="hero-btn-secondary">
                 VIEW CATALOG
             </a>
         </div>

@@ -68,9 +68,12 @@
                                 <div class="select-wrapper">
                                     <select name="pickup_location" class="form-control form-select" required>
                                         @foreach([
-                                            'The Heritage Mill, Downtown',
-                                            'The Heritage Mill, Northside',
-                                            'The Heritage Mill, West Park',
+                                            'Butter Bake, Tanjung Karang',
+                                            'B,utter Bake, Kedaton',
+                                            'Butter Bake, Way Halim',
+                                            'Butter Bake, Teluk Betung',
+                                            'Butter Bake, Sukarame',
+                                            'Butter Bake, Rajabasa'
                                         ] as $loc)
                                             <option value="{{ $loc }}"
                                                 {{ old('pickup_location') === $loc ? 'selected' : '' }}>
