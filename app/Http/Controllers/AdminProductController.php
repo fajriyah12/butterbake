@@ -125,4 +125,14 @@ class AdminProductController extends Controller
         return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil dihapus');
     }
+
+    public function updateStock(Product $product, int $qty)
+   {
+    $newStock = max(0, $product->stock - $qty);
+
+    $product->update([
+        'stock'     => $newStock,
+        'is_active' => $newStock > 0,
+    ]);
+}
 }

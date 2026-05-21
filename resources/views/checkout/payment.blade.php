@@ -5,7 +5,7 @@
 
 <div class="page-header">
     <div class="container">
-        <h1 class="page-header-title">Pembayaran</h1>
+        <h1 class="page-header-title">Payment</h1>
     </div>
 </div>
 
@@ -37,24 +37,20 @@
                         <div class="pay-step-line done"></div>
                         <div class="pay-step active">
                             <div class="pay-step-circle">2</div>
-                            <span>Pembayaran</span>
+                            <span>Payment</span>
                         </div>
                         <div class="pay-step-line"></div>
                         <div class="pay-step">
                             <div class="pay-step-circle">3</div>
-                            <span>Konfirmasi</span>
+                            <span>Confirmation</span>
                         </div>
                     </div>
 
                     <div class="checkout-card">
                         <h3 class="checkout-card-title">
                             <i class="fas fa-credit-card" style="color:var(--amber)"></i>
-                            Pilih Metode Pembayaran
+                            Choose Payment Method
                         </h3>
-
-                        <p class="pay-note">
-                            Pilih <strong>salah satu</strong> metode — Virtual Account <em>atau</em> E-Wallet.
-                        </p>
 
                         {{-- ── VIRTUAL ACCOUNT ── --}}
                         <div class="pay-group">
@@ -79,34 +75,9 @@
                             </div>
                         </div>
 
-                        <div class="pay-divider"><span>atau</span></div>
-
-                        {{-- ── E-WALLET ── --}}
-                        <div class="pay-group">
-                            <div class="pay-group-label">
-                                <i class="fas fa-wallet"></i> E-Wallet / QRIS
-                            </div>
-                            <div class="pay-options-grid">
-                                @foreach([
-                                    ['qris_gopay',     'GoPay',     'images/gopay.webp'],
-                                    ['qris_ovo',       'OVO',       'images/ovo.png'],
-                                    ['qris_dana',      'DANA',      'images/dana.webp'],
-                                    ['qris_shopeepay', 'ShopeePay', 'images/shopeepay.webp'],
-                                ] as [$val, $label, $logo])
-                                <div class="pay-option" data-value="{{ $val }}" onclick="selectPayment(this)">
-                                    <div class="pay-option-inner">
-                                        <div class="pay-option-icon ew-icon"><img src="{{ asset($logo) }}" alt="{{ $label }}"></div>
-                                        <span>{{ $label }}</span>
-                                    </div>
-                                    <i class="fas fa-check-circle pay-check"></i>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-
                         <div id="payError" class="pay-inline-error" style="display:none;">
                             <i class="fas fa-exclamation-triangle"></i>
-                            Pilih salah satu metode pembayaran terlebih dahulu.
+                            Please select a payment method first.
                         </div>
                     </div>
 
@@ -157,7 +128,7 @@
                 {{-- ── RIGHT: ORDER SUMMARY ── --}}
                 <div class="checkout-right">
                     <div class="cart-summary-box">
-                        <h3 class="cart-summary-title checkout">Ringkasan Pesanan</h3>
+                        <h3 class="cart-summary-title checkout">Order Summary</h3>
 
                         @php
                             $subtotal = $cart->items->sum(fn($i) => $i->product->price * $i->quantity);
@@ -206,13 +177,13 @@
                                 style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;"
                                 onclick="return validatePayment()">
                             <i class="fas fa-lock"></i>
-                            Konfirmasi Pesanan
+                            Confirm Order
                         </button>
                         </form>
 
                         <div class="basket-notify" style="justify-content:center;">
                             <i class="fas fa-shield-alt" style="color:var(--amber);font-size:.8rem;flex-shrink:0;"></i>
-                            <span>Transaksi terenkripsi &amp; aman</span>
+                            <span>Secure & Trusted Transactions</span>
                         </div>
                     </div>
                 </div>

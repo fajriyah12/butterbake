@@ -1614,3 +1614,8 @@ input:checked + .slider::before { transform: translateX(20px); }
     }
 }
 
+
+/* UPDATE STATUS FORM */
+.status-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; }
+.btn-update-status { width: 100%; padding: 10px; border: none; border-radius: 8px; background: #b45309; color: #fff; cursor: pointer; font-size: 14px; font-weight: 600; }
+

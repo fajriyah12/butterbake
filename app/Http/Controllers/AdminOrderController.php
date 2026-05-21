@@ -34,18 +34,13 @@ class AdminOrderController extends Controller
     Order $order
 ) {
 
-    $request->validate([
-        'status' => 'required'
-    ]);
+     $request->validate(['status' => 'required']);
 
-    $order->update([
-        'status' => $request->status
-    ]);
+    $order->update(['status' => $request->status]);
 
-    return back()->with(
-        'success',
-        'Order status updated'
-    );
+    $statusLabel = ucfirst($request->status);
+
+    return back()->with('success', "Status order berhasil diubah ke {$statusLabel}");
 }
 public function updatePayment(Request $request, Order $order)
 {

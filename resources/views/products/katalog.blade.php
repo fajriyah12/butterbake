@@ -78,7 +78,7 @@
                                         <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80" alt="{{ $product->name }}">
                                     @endif
                                     @if($product->is_featured)
-                                        <span class="product-card-badge">Unggulan</span>
+                                        <span class="product-card-badge">Best Seller</span>
                                     @endif
                                 </a>
                                 <div class="product-card-body">

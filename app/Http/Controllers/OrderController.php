@@ -45,7 +45,6 @@ class OrderController extends Controller
         );
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | PAYMENT PAGE
@@ -55,7 +54,12 @@ class OrderController extends Controller
     public function payment(Request $request)
     {
 
-        // BUY NOW
+        /*
+        |--------------------------------------------------------------------------
+        | BUY NOW
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->has('product_id')) {
 
             $product = Product::findOrFail(
@@ -79,17 +83,52 @@ class OrderController extends Controller
             );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATION
+        |--------------------------------------------------------------------------
+        */
+
         $request->validate([
-            'delivery_method' => 'required|in:pickup,delivery',
-            'pickup_date'     => 'nullable|string',
-            'notes'           => 'nullable|string|max:500',
+
+            'delivery_method' =>
+                'required|in:pickup,delivery',
+
+            'pickup_date' =>
+                'nullable|string',
+
+            'delivery_address' =>
+                'nullable|string|max:255',
+
+            'delivery_city' =>
+                'nullable|string|max:100',
+
+            'delivery_postal_code' =>
+                'nullable|string|max:20',
+
+            'pickup_location' =>
+                'nullable|string|max:255',
+
+            'notes' =>
+                'nullable|string|max:500',
         ]);
 
-        // simpan ke session
+        /*
+        |--------------------------------------------------------------------------
+        | SAVE CHECKOUT DATA TO SESSION
+        |--------------------------------------------------------------------------
+        */
+
         session([
             'checkout_data' =>
                 $request->except('_token')
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | GET USER CART
+        |--------------------------------------------------------------------------
+        */
 
         $cart = Cart::where('user_id', Auth::id())
             ->with('items.product')
@@ -111,7 +150,6 @@ class OrderController extends Controller
         );
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | PLACE ORDER
@@ -120,12 +158,25 @@ class OrderController extends Controller
 
     public function placeOrder(Request $request)
     {
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATION
+        |--------------------------------------------------------------------------
+        */
+
         $request->validate([
             'payment_method' => 'required|string',
         ], [
             'payment_method.required' =>
                 'Pilih salah satu metode pembayaran.',
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | GET CART
+        |--------------------------------------------------------------------------
+        */
 
         $cart = Cart::where('user_id', Auth::id())
             ->with('items.product')
@@ -143,11 +194,26 @@ class OrderController extends Controller
                 );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE ORDER
+        |--------------------------------------------------------------------------
+        */
+
+        $order = null;
+
         DB::transaction(function () use (
+            &$order,
             $cart,
             $checkout,
             $request
         ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | CALCULATE TOTAL
+            |--------------------------------------------------------------------------
+            */
 
             $subtotal = $cart->items->sum(
                 fn($i) =>
@@ -158,19 +224,38 @@ class OrderController extends Controller
 
             $deliveryFee = 0;
 
-            $total = $subtotal + $tax;
+            $total =
+                $subtotal +
+                $tax +
+                $deliveryFee;
+
+            /*
+            |--------------------------------------------------------------------------
+            | CREATE ORDER
+            |--------------------------------------------------------------------------
+            */
 
             $order = Order::create([
 
-                'user_id'      => Auth::id(),
+                'user_id' => Auth::id(),
 
                 'order_number' =>
                     Order::generateOrderNumber(),
 
-                // STATUS ORDER
+                /*
+                |--------------------------------------------------------------------------
+                | ORDER STATUS
+                |--------------------------------------------------------------------------
+                */
+
                 'status' => 'pending',
 
-                // DELIVERY
+                /*
+                |--------------------------------------------------------------------------
+                | DELIVERY
+                |--------------------------------------------------------------------------
+                */
+
                 'delivery_method' =>
                     $checkout['delivery_method']
                     ?? 'pickup',
@@ -187,33 +272,58 @@ class OrderController extends Controller
                     $checkout['delivery_postal_code']
                     ?? null,
 
-                // PICKUP
+                /*
+                |--------------------------------------------------------------------------
+                | PICKUP
+                |--------------------------------------------------------------------------
+                */
+
                 'pickup_location' =>
                     $checkout['pickup_location']
                     ?? null,
 
                 'pickup_date' =>
-                    now(),
+                    $checkout['pickup_date']
+                    ?? now(),
 
-                // PAYMENT
-                'subtotal'      => $subtotal,
-                'delivery_fee' => $deliveryFee,
-                'total'         => $total,
+                /*
+                |--------------------------------------------------------------------------
+                | PAYMENT
+                |--------------------------------------------------------------------------
+                */
+
+                'subtotal' =>
+                    $subtotal,
+
+                'delivery_fee' =>
+                    $deliveryFee,
+
+                'total' =>
+                    $total,
 
                 'payment_method' =>
                     $request->payment_method,
 
-                // BELUM DIBAYAR
                 'payment_status' =>
                     'pending',
 
-                // NOTES
+                /*
+                |--------------------------------------------------------------------------
+                | NOTES
+                |--------------------------------------------------------------------------
+                */
+
                 'notes' =>
                     $checkout['notes']
                     ?? null,
             ]);
 
-            // ORDER ITEMS
+            /*
+            |--------------------------------------------------------------------------
+            | CREATE ORDER ITEMS
+            |--------------------------------------------------------------------------
+            */
+
             foreach ($cart->items as $item) {
 
                 OrderItem::create([
@@ -237,14 +347,47 @@ class OrderController extends Controller
                         $item->product->price
                         * $item->quantity,
                 ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | REDUCE PRODUCT STOCK
+                |--------------------------------------------------------------------------
+                */
+
+                $product = $item->product;
+
+                $newStock = max(
+                    0,
+                    $product->stock - $item->quantity
+                );
+
+                $product->update([
+
+                    'stock' =>
+                        $newStock,
+
+                    'is_active' =>
+                        $newStock > 0,
+                ]);
             }
 
-            // CLEAR CART
+            /*
+            |--------------------------------------------------------------------------
+            | CLEAR CART
+            |--------------------------------------------------------------------------
+            */
+
             $cart->items()->delete();
 
             $cart->update([
                 'total' => 0
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | CLEAR SESSION
+            |--------------------------------------------------------------------------
+            */
 
             session()->forget(
                 'checkout_data'
@@ -260,7 +403,6 @@ class OrderController extends Controller
             ->route('order.confirmation');
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | ORDER CONFIRMATION PAGE
@@ -268,18 +410,23 @@ class OrderController extends Controller
     */
 
     public function confirmation()
-{
-    $orderId = session('last_order_id');
+    {
+        $orderId = session('last_order_id');
 
-    if (!$orderId) {
-        return redirect()->route('home');
+        if (!$orderId) {
+
+            return redirect()
+                ->route('home');
+        }
+
+        $order = Order::with('items')
+            ->findOrFail($orderId);
+
+        return view(
+            'order.confirmation',
+            compact('order')
+        );
     }
-
-    $order = Order::with('items')->findOrFail($orderId);
-
-    return view('order.confirmation', compact('order'));
-}
-
 
     /*
     |--------------------------------------------------------------------------
@@ -291,13 +438,23 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        // pastikan order milik user login
+        /*
+        |--------------------------------------------------------------------------
+        | CHECK ORDER OWNER
+        |--------------------------------------------------------------------------
+        */
+
         if ($order->user_id != Auth::id()) {
 
             abort(403);
         }
 
-        // update status
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE PAYMENT STATUS
+        |--------------------------------------------------------------------------
+        */
+
         $order->status =
             'pending';
 
@@ -313,7 +470,6 @@ class OrderController extends Controller
                 'Payment confirmation sent successfully.'
             );
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -336,19 +492,23 @@ class OrderController extends Controller
             compact('orders')
         );
     }
+
     /*
-|--------------------------------------------------------------------------
-| ORDER DETAIL
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | ORDER DETAIL
+    |--------------------------------------------------------------------------
+    */
 
-public function show($id)
-{
-    $order = Order::with('items.product')
-        ->where('id', $id)
-        ->where('user_id', Auth::id())
-        ->firstOrFail();
+    public function show($id)
+    {
+        $order = Order::with('items.product')
+            ->where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-    return view('order.show', compact('order'));
-}
+        return view(
+            'order.show',
+            compact('order')
+        );
+    }
 }
