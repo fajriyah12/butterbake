@@ -62,6 +62,23 @@
                 {{-- PRICE --}}
                 <div class="product-detail-price">{{ $product->formatted_price }}</div>
 
+                {{-- STOK --}}
+               <div class="product-stock">
+               @if($product->stock > 10)
+               <span style="color:#2e7d32;">
+                 In Stock ({{ $product->stock }})
+                </span>
+               @elseif($product->stock > 0)
+                <span style="color:#e67e22;">
+                Low Stock ({{ $product->stock }})
+                </span>
+               @else
+               <span style="color:#c0392b;">
+               Out of Stock
+               </span>
+               @endif
+                </div>
+
                 {{-- DESC --}}
                 @if($product->description)
                 <p class="product-description">{{ $product->description }}</p>
@@ -133,12 +150,18 @@
 
                         {{-- BUY NOW --}}
                         <form action="{{ route('checkout.payment') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <input type="hidden" name="quantity" id="buyQty" value="1">
-                            <button type="submit" class="btn-buy">Buy Now</button>
-                        </form>
+    @csrf
 
+    <input type="hidden" name="buy_now" value="1">
+
+    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+    <input type="hidden" name="quantity" id="buyQty" value="1">
+
+    <button type="submit" class="btn-buy">
+        Buy Now
+    </button>
+</form>
                         </div>
                     </div>
 

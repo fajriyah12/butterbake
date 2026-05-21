@@ -88,8 +88,8 @@ Route::middleware('auth')->group(function () {
         ->name('order.show');
 
     // PROFILE
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile/edit', [ProfileController::class, 'index'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');

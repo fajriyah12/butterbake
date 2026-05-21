@@ -4,6 +4,27 @@
 
 @section('content')
 
+{{-- SUCCESS POPUP --}}
+@if(session('success'))
+<div id="successPopup" class="popup-overlay">
+    <div class="popup-box">
+
+        <div class="popup-icon">✓</div>
+
+        <h2 class="popup-title">Berhasil!</h2>
+
+        <p class="popup-message">
+            {{ session('success') }}
+        </p>
+
+        <button onclick="closePopup()" class="popup-btn">
+            OK
+        </button>
+
+    </div>
+</div>
+@endif
+
 <div class="profile-page">
 
     <div class="profile-wrapper">
@@ -11,19 +32,20 @@
         {{-- SIDEBAR --}}
         <aside class="profile-sidebar">
 
-            <a href="#" class="profile-menu active">
+            <a href="{{ route('profile.index') }}" class="profile-menu ">
+
                 <i class="fas fa-user"></i>
+
                 <span>Profile</span>
+
             </a>
 
-            <a href="{{ route('order.myorders') }}"  class="profile-menu">
+            <a href="{{ route('order.myorders') }}" class="profile-menu">
+
                 <i class="fas fa-box"></i>
-                <span>Orders</span>
-            </a>
 
-            <a href="#" class="profile-menu">
-                <i class="fas fa-shield-alt"></i>
-                <span>Security</span>
+                <span>Orders</span>
+
             </a>
 
             <div class="sidebar-line"></div>
@@ -38,7 +60,6 @@
                     <span>Logout</span>
 
                 </button>
-
             </form>
 
         </aside>
@@ -52,8 +73,11 @@
                 <h2>Personal Information</h2>
 
                 <a href="{{ route('profile.edit') }}">
-                <i class="fas fa-pen"></i>
-                Edit Details
+
+                    <i class="fas fa-pen"></i>
+
+                    Edit Details
+
                 </a>
 
             </div>
@@ -80,7 +104,7 @@
 
                     <span>PHONE NUMBER</span>
 
-                    <h4>{{ $user->phone  }}</h4>
+                    <h4>{{ $user->phone }}</h4>
 
                 </div>
 
@@ -116,17 +140,7 @@
                         Just around the corner from the clock tower.
                     </p>
 
-                    <div class="location-actions">
-
-                        <a href="#" class="direction-btn">
-                            Directions
-                        </a>
-
-                        <a href="#" class="change-btn">
-                            Change
-                        </a>
-
-                    </div>
+                    
 
                 </div>
 
@@ -149,5 +163,21 @@
     </div>
 
 </div>
+
+{{-- POPUP SCRIPT --}}
+<script>
+function closePopup() {
+    const popup = document.getElementById('successPopup');
+
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+
+// Auto close popup after 3 seconds
+setTimeout(() => {
+    closePopup();
+}, 3000);
+</script>
 
 @endsection

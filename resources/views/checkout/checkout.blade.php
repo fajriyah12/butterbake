@@ -97,12 +97,19 @@
                                     --}}
                                     <select name="pickup_date" class="form-control form-select" required>
                                         @foreach([
-                                            'Today, 9:00 AM – 10:00 AM',
-                                            'Today, 10:00 AM – 11:00 AM',
-                                            'Today, 11:00 AM – 12:00 PM',
-                                            'Today, 12:00 PM – 1:00 PM',
-                                            'Today, 1:00 PM – 2:00 PM',
-                                            'Today, 2:00 PM – 3:00 PM',
+                                         'Today, 10:00 AM',
+                                         'Today, 11:00 AM',
+                                         'Today, 12:00 PM',
+                                         'Today, 1:00 PM',
+                                         'Today, 2:00 PM',
+                                         'Today, 3:00 PM',
+                                         'Today, 4:00 PM',
+                                         'Today, 5:00 PM',
+                                         'Today, 6:00 PM',
+                                         'Today, 7:00 PM',
+                                         'Today, 8:00 PM',
+                                         'Today, 9:00 PM',
+
                                         ] as $slot)
                                             <option value="{{ $slot }}"
                                                 {{ old('pickup_date') === $slot ? 'selected' : '' }}>

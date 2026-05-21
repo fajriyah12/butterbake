@@ -6,7 +6,7 @@
 <div class="page-header">
     <div class="container">
         <h1 class="page-header-title">Your Basket</h1>
-        <p class="page-header-subtitle">{{ $cart->items->count() }} item dalam keranjang</p>
+        <p class="page-header-subtitle">{{ $cart->items->count() }} items in cart</p>
     </div>
 </div>
 
@@ -15,10 +15,10 @@
         @if($cart->items->isEmpty())
             <div class="empty-state">
                 <div class="empty-state-icon"><i class="fas fa-shopping-basket"></i></div>
-                <h3 class="empty-state-title">Keranjang Anda Kosong</h3>
-                <p class="empty-state-desc">Yuk mulai belanja dan temukan produk terbaik kami</p>
+                <h3 class="empty-state-title">Your Cart is Empty </h3>
+                <p class="empty-state-desc">Let's start shopping and discover our best products</p>
                 <a href="{{ route('catalog.index') }}" class="empty-cart-btn">
-                    <i class="fas fa-bread-slice"></i> Mulai Belanja
+                    <i class="fas fa-bread-slice"></i> Start Shopping
                 </a>
             </div>
         @else
@@ -117,14 +117,14 @@
 
                     <div style="margin-top:20px;">
                         <a href="{{ route('catalog.index') }}" class="btn btn-ghost">
-                            <i class="fas fa-arrow-left"></i> Lanjut Belanja
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
                         </a>
                     </div>
                 </div>
 
                 {{-- ============ ORDER SUMMARY ============ --}}
                 <div class="cart-summary-box">
-                    <h3 class="cart-summary-title">Ringkasan Pesanan</h3>
+                    <h3 class="cart-summary-title">Order Summary</h3>
 
                     @foreach($cart->items as $item)
                         <div class="cart-summary-row">
@@ -134,25 +134,25 @@
                     @endforeach
 
                     <div class="cart-summary-row">
-                        <span>Ongkir</span>
-                        <span style="color:var(--amber);">Dihitung saat checkout</span>
+                        <span>Shipping Cost</span>
+                        <span style="color:var(--amber);">Calculated at checkout</span>
                     </div>
 
                     <div class="cart-summary-row total">
-                        <span>Total Sementara</span>
+                        <span>Subtotal</span>
                         <span>Rp {{ number_format($cart->total, 0, ',', '.') }}</span>
                     </div>
 
                     <a href="{{ route('checkout') }}"
                        class="btn btn-primary btn-full btn-lg"
                        style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
-                        Lanjut ke Checkout
+                        Proceed to Checkout
                         <i class="fas fa-arrow-right"></i>
                     </a>
 
                     <div style="margin-top:16px;text-align:center;font-size:.8rem;color:var(--text-light);">
                         <i class="fas fa-shield-alt" style="color:var(--amber)"></i>
-                        Transaksi Aman &amp; Terpercaya
+                        Secure & Trusted Transactions
                     </div>
                 </div>
 
@@ -163,12 +163,7 @@
 
 @push('scripts')
 <script>
-/**
- * Tombol KURANG ( − )
- * Logika:
- *   qty > 1  → kurangi qty lalu submit form update
- *   qty = 1  → langsung submit form delete (hapus item dari keranjang)
- */
+
 function handleDec(btn) {
     // Naik ke .cart-row yang punya data-item-id
     const row        = btn.closest('.cart-row');
@@ -179,19 +174,16 @@ function handleDec(btn) {
     let val = parseInt(input.value);
 
     if (val > 1) {
-        // Kurangi qty → update
+
         input.value = val - 1;
         formUpdate.submit();
     } else {
-        // qty = 1 → tekan − → hapus langsung
+
         formDelete.submit();
     }
 }
 
-/**
- * Tombol TAMBAH ( + )
- * Tambah qty lalu submit form update.
- */
+
 function handleInc(btn) {
     const row        = btn.closest('.cart-row');
     const formUpdate = row.querySelector('.form-update');

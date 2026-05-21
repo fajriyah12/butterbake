@@ -5,7 +5,7 @@
 <!-- HERO SECTION -->
 <section class="hero-section">
     <div class="hero-content">
-        <span class="year-badge">EST. 2012</span>
+        <span class="year-badge">EST. 1924</span>
         <h1>
             Handcrafted Daily, <br>
             <span>With Heritage Grain.</span>
