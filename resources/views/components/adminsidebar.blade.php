@@ -4,9 +4,8 @@
 
         <div class="sidebar-brand">
             <div class="sidebar-brand-logo">
-                <img src="{{ asset('images/butterbake.png')}}" alt ="butter bake">
+                <img src="{{ asset('images/butterbake.png')}}" alt="butter bake">
             </div>
-
             <div class="sidebar-brand-text">
                 <div class="logo">Butter Bake</div>
                 <div class="logo-sub">Admin</div>
@@ -17,13 +16,13 @@
 
             <a href="{{ route('admin.dashboard') }}"
                class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="bi bi-grid"></i>
+                <i class="bi bi-grid-1x2"></i>
                 Dashboard
             </a>
 
             <a href="{{ route('admin.products.index') }}"
                class="{{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                <i class="bi bi-box-seam"></i>
+                <i class="bi bi-bar-chart-steps"></i>
                 Products
             </a>
 
@@ -43,22 +42,26 @@
 
     </div>
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="logout-btn">
-            <i class="bi bi-box-arrow-left"></i>
-            Log Out
-        </button>
-    </form>
+    <div class="sidebar-bottom">
+        <div class="sidebar-divider"></div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout-btn">
+                <i class="bi bi-box-arrow-right"></i>
+                Log Out
+            </button>
+        </form>
+    </div>
 
 </div>
 
 {{-- GLOBAL TOPBAR --}}
 <div class="global-topbar">
-
     <div class="dash-topbar-right">
         <button class="icon-btn"><i class="bi bi-bell"></i></button>
         <button class="icon-btn"><i class="bi bi-gear"></i></button>
-        <button class="logo-btn" disabled><img src="{{ asset('images/butterbake.png') }}" alt="Butter Bake"></button>
+        <button class="logo-btn" disabled>
+            <img src="{{ asset('images/butterbake.png') }}" alt="Butter Bake">
+        </button>
     </div>
 </div>
