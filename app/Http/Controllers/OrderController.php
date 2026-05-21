@@ -60,7 +60,7 @@ class OrderController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if ($request->has('product_id')) {
+        if ($request->has('buy_now')) {
 
             $product = Product::findOrFail(
                 $request->product_id
@@ -72,15 +72,28 @@ class OrderController extends Controller
 
             $item->product = $product;
 
-            $item->quantity =
-                $request->quantity ?? 1;
+           $item->quantity =
+           $request->quantity ?? 1;
 
-            $cart->items = collect([$item]);
+           $cart->items = collect([$item]);
 
-            return view(
-                'checkout.payment',
-                compact('cart')
-            );
+/*
+|--------------------------------------------------------------------------
+| SAVE BUY NOW TO SESSION
+|--------------------------------------------------------------------------
+*/
+
+session([
+    'buy_now' => [
+        'product_id' => $product->id,
+        'quantity' => $request->quantity ?? 1,
+    ]
+]);
+
+return view(
+    'checkout.payment',
+    compact('cart')
+);
         }
 
         /*
@@ -177,11 +190,34 @@ class OrderController extends Controller
         | GET CART
         |--------------------------------------------------------------------------
         */
+        $buyNow = session('buy_now');
 
-        $cart = Cart::where('user_id', Auth::id())
-            ->with('items.product')
-            ->first();
+         if ($buyNow) {
 
+         $product = Product::findOrFail(
+         $buyNow['product_id']
+        );
+
+         $cart = new \stdClass();
+
+         $item = new \stdClass();
+
+         $item->product = $product;
+
+         $item->product_id = $product->id;
+
+         $item->quantity = $buyNow['quantity'];
+
+         $cart->items = collect([$item]);
+
+        } else {
+
+         $cart = Cart::where('user_id', Auth::id())
+        ->with('items.product')
+        ->first();
+         }
+
+        
         $checkout = session('checkout_data', []);
 
         if (!$cart || $cart->items->isEmpty()) {
@@ -206,7 +242,8 @@ class OrderController extends Controller
             &$order,
             $cart,
             $checkout,
-            $request
+            $request,
+            $buyNow
         ) {
 
             /*
@@ -376,13 +413,14 @@ class OrderController extends Controller
             | CLEAR CART
             |--------------------------------------------------------------------------
             */
+              if (!$buyNow) {
 
-            $cart->items()->delete();
+              $cart->items()->delete();
 
-            $cart->update([
-                'total' => 0
-            ]);
-
+              $cart->update([
+              'total' => 0
+               ]);
+             }
             /*
             |--------------------------------------------------------------------------
             | CLEAR SESSION
@@ -391,6 +429,9 @@ class OrderController extends Controller
 
             session()->forget(
                 'checkout_data'
+            );
+            session()->forget(
+                'buy_now'
             );
 
             session([

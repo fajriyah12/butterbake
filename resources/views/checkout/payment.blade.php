@@ -172,7 +172,7 @@
                             <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
                         </div>
 
-                        <form method="GET" action="{{ route('order.confirmation') }}">
+                        
                         <button type="submit" class="btn btn-primary btn-full btn-lg"
                                 style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;"
                                 onclick="return validatePayment()">
