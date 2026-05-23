@@ -1,5 +1,6 @@
 <footer class="footer">
-
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <div class="footer-container">
 
         <!-- BRAND -->
@@ -51,13 +52,9 @@
             <h3>Follow Along</h3>
 
             <div class="social-icons">
-
-                <span>🌐</span>
-
-                <span>@</span>
-
-                <span>💬</span>
-
+                <span><i class="fab fa-instagram"></i></span>
+                <span><i class="fab fa-facebook-f"></i></span>
+                <span><i class="fab fa-whatsapp"></i></span>
             </div>
 
         </div>

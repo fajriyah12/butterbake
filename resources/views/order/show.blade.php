@@ -133,10 +133,6 @@
                     <div class="bb-card-title">Pickup Details</div>
 
                     <div class="detail-row">
-                        <span>{{ $order->pickup_location ?? '-' }}</span>
-                    </div>
-
-                    <div class="detail-row">
                         <span>
                             {{ $order->pickup_date
                                 ? \Carbon\Carbon::parse($order->pickup_date)->format('d M Y, H:i')

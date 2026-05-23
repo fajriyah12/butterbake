@@ -19,6 +19,7 @@ use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,17 +29,22 @@ use App\Http\Controllers\AdminDashboardController;
 
 Route::middleware('guest')->group(function () {
 
-    Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
+    Route::get('/signup', [AuthController::class, 'showSignup'])
+        ->name('signup');
+
     Route::post('/signup', [AuthController::class, 'signup']);
 
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::get('/login', [AuthController::class, 'showLogin'])
+        ->name('login');
+
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::get('/admin/login', function () {
         return view('auth.adminlogin');
     })->name('admin.login');
 
-    Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/admin/login', [AuthController::class, 'login'])
+        ->name('admin.login.submit');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])
@@ -51,14 +57,23 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about', [HomeController::class, 'about'])->name('about');
-Route::get('/locations', [HomeController::class, 'locations'])->name('locations');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
 
-Route::get('/catalog', [ProductController::class, 'index'])->name('catalog.index');
-Route::get('/catalog/{slug}', [ProductController::class, 'show'])->name('catalog.show');
+Route::get('/about', [HomeController::class, 'about'])
+    ->name('about');
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/locations', [HomeController::class, 'locations'])
+    ->name('locations');
+
+Route::get('/catalog', [ProductController::class, 'index'])
+    ->name('catalog.index');
+
+Route::get('/catalog/{slug}', [ProductController::class, 'show'])
+    ->name('catalog.show');
+
+Route::get('/cart', [CartController::class, 'index'])
+    ->name('cart.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -68,15 +83,35 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
 Route::middleware('auth')->group(function () {
 
-    // CART
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::patch('/cart/{item}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{item}', [CartController::class, 'remove'])->name('cart.remove');
+    /*
+    |--------------------------------------------------------------------------
+    | CART
+    |--------------------------------------------------------------------------
+    */
 
-    // CHECKOUT & ORDERS
-    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout/payment', [OrderController::class, 'payment'])->name('checkout.payment');
-    Route::post('/order/place', [OrderController::class, 'placeOrder'])->name('order.place');
+    Route::post('/cart/add', [CartController::class, 'add'])
+        ->name('cart.add');
+
+    Route::patch('/cart/{item}', [CartController::class, 'update'])
+        ->name('cart.update');
+
+    Route::delete('/cart/{item}', [CartController::class, 'remove'])
+        ->name('cart.remove');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECKOUT & ORDERS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::match(['get', 'post'], '/checkout', [OrderController::class, 'checkout'])
+        ->name('checkout');
+
+    Route::post('/checkout/payment', [OrderController::class, 'payment'])
+        ->name('checkout.payment');
+
+    Route::post('/order/place', [OrderController::class, 'placeOrder'])
+        ->name('order.place');
 
     Route::get('/order/confirmation', [OrderController::class, 'confirmation'])
         ->name('order.confirmation');
@@ -87,61 +122,88 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/{order}', [OrderController::class, 'show'])
         ->name('order.show');
 
-    // PROFILE
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE
+    |--------------------------------------------------------------------------
+    */
 
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('profile.index');
+
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password');
 });
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN AREA (FIXED)
+| ADMIN AREA
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
 
     /*
-    | DASHBOARD (FIXED - PAKAI CONTROLLER)
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
     */
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-        ->name('admin.dashboard');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('dashboard');
 
-        /*
-        | PRODUCTS
-        */
-        Route::resource('products', AdminProductController::class);
+    /*
+    |--------------------------------------------------------------------------
+    | PRODUCTS
+    |--------------------------------------------------------------------------
+    */
 
-        /*
-        | CUSTOMERS
-        */
-        Route::get('/customers', [AdminCustomerController::class, 'index'])
-            ->name('customers.index');
+    Route::resource('products', AdminProductController::class);
 
-        Route::get('/customers/{id}', [AdminCustomerController::class, 'show'])
-            ->name('customers.show');
+    /*
+    |--------------------------------------------------------------------------
+    | CATEGORIES
+    |--------------------------------------------------------------------------
+    */
 
-        Route::patch('/customers/{user}/toggle-status', [AdminCustomerController::class, 'toggleStatus'])
-            ->name('customers.toggle-status');
+    Route::resource('categories', AdminCategoryController::class);
 
-        /*
-        | ORDERS
-        */
-        Route::get('/orders', [AdminOrderController::class, 'index'])
-            ->name('orders.index');
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMERS
+    |--------------------------------------------------------------------------
+    */
 
-        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])
-            ->name('orders.show');
+    Route::get('/customers', [AdminCustomerController::class, 'index'])
+        ->name('customers.index');
 
-        Route::patch('/orders/{order}', [AdminOrderController::class, 'updateStatus'])
-            ->name('orders.update');
+    Route::get('/customers/{id}', [AdminCustomerController::class, 'show'])
+        ->name('customers.show');
 
-        Route::patch('/orders/{order}/payment', [AdminOrderController::class, 'updatePayment'])
-            ->name('orders.updatePayment');
-    });
+    Route::patch('/customers/{user}/toggle-status', [AdminCustomerController::class, 'toggleStatus'])
+        ->name('customers.toggle-status');
 
+    /*
+    |--------------------------------------------------------------------------
+    | ORDERS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/orders', [AdminOrderController::class, 'index'])
+        ->name('orders.index');
+
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])
+        ->name('orders.show');
+
+    Route::patch('/orders/{order}', [AdminOrderController::class, 'updateStatus'])
+        ->name('orders.update');
+
+    Route::patch('/orders/{order}/payment', [AdminOrderController::class, 'updatePayment'])
+        ->name('orders.updatePayment');
 });

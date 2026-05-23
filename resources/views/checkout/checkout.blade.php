@@ -4,13 +4,13 @@
 @section('content')
 
 <div class="page-header">
-    <div class="container">
+    <div class="container" style="max-width:100%; margin:0; padding:0px 40px;">
         <h1 class="page-header-title">Checkout & Pickup</h1>
     </div>
 </div>
 
-<div class="section" style="padding-top:48px; padding-bottom:64px;">
-    <div class="container">
+<div class="section" style="padding-top:20px; padding-bottom:40px;">
+    <div class="container" style="max-width:100%; margin:0; padding:0 40px;">
 
         @if($errors->any())
             <div style="background:#fff0f0;border:1px solid #f5c6c6;border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#c0392b;display:flex;align-items:center;gap:10px;">
@@ -28,7 +28,6 @@
                     {{-- CONTACT INFORMATION --}}
                     <div class="checkout-card">
                         <h3 class="checkout-card-title">
-                            <i class="fas fa-user-circle" style="color:var(--amber)"></i>
                             Contact Information
                         </h3>
 
@@ -58,7 +57,6 @@
                     {{-- PICKUP DETAILS --}}
                     <div class="checkout-card">
                         <h3 class="checkout-card-title">
-                            <i class="fas fa-store" style="color:var(--amber)"></i>
                             Pickup Details
                         </h3>
 
@@ -68,12 +66,7 @@
                                 <div class="select-wrapper">
                                     <select name="pickup_location" class="form-control form-select" required>
                                         @foreach([
-                                            'Butter Bake, Tanjung Karang',
-                                            'B,utter Bake, Kedaton',
-                                            'Butter Bake, Way Halim',
-                                            'Butter Bake, Teluk Betung',
-                                            'Butter Bake, Sukarame',
-                                            'Butter Bake, Rajabasa'
+                                            'Butter Bake, Kedaton',
                                         ] as $loc)
                                             <option value="{{ $loc }}"
                                                 {{ old('pickup_location') === $loc ? 'selected' : '' }}>
@@ -87,29 +80,20 @@
                             <div class="form-group" style="margin-bottom:0;">
                                 <label class="form-label-upper">Pickup Time</label>
                                 <div class="select-wrapper">
-                                    {{--
-                                        Field ini di-map ke pickup_date di controller.
-                                        Karena migration pickup_date bertipe datetime,
-                                        kita kirim value berupa string slot waktu
-                                        dan controller menyimpannya di session.
-                                        Saat placeOrder, simpan sebagai string di notes
-                                        atau gunakan kolom terpisah (lihat catatan di bawah).
-                                    --}}
                                     <select name="pickup_date" class="form-control form-select" required>
                                         @foreach([
-                                         'Today, 10:00 AM',
-                                         'Today, 11:00 AM',
-                                         'Today, 12:00 PM',
-                                         'Today, 1:00 PM',
-                                         'Today, 2:00 PM',
-                                         'Today, 3:00 PM',
-                                         'Today, 4:00 PM',
-                                         'Today, 5:00 PM',
-                                         'Today, 6:00 PM',
-                                         'Today, 7:00 PM',
-                                         'Today, 8:00 PM',
-                                         'Today, 9:00 PM',
-
+                                            'Today, 10:00 AM',
+                                            'Today, 11:00 AM',
+                                            'Today, 12:00 PM',
+                                            'Today, 1:00 PM',
+                                            'Today, 2:00 PM',
+                                            'Today, 3:00 PM',
+                                            'Today, 4:00 PM',
+                                            'Today, 5:00 PM',
+                                            'Today, 6:00 PM',
+                                            'Today, 7:00 PM',
+                                            'Today, 8:00 PM',
+                                            'Today, 9:00 PM',
                                         ] as $slot)
                                             <option value="{{ $slot }}"
                                                 {{ old('pickup_date') === $slot ? 'selected' : '' }}>
@@ -126,7 +110,6 @@
                     {{-- NOTES --}}
                     <div class="checkout-card">
                         <h3 class="checkout-card-title">
-                            <i class="fas fa-sticky-note" style="color:var(--amber)"></i>
                             Catatan (opsional)
                         </h3>
                         <div class="form-group" style="margin-bottom:0;">
@@ -135,7 +118,6 @@
                         </div>
                     </div>
 
-                    {{-- Hidden fields yang dibutuhkan controller --}}
                     <input type="hidden" name="delivery_method" value="pickup">
 
                 </div>
@@ -143,7 +125,7 @@
                 {{-- ── RIGHT: YOUR BASKET ── --}}
                 <div class="checkout-right">
                     <div class="cart-summary-box">
-                        <h3 class="cart-summary-title checkout">Your Basket</h3>
+                        <h3 class="cart-summary-title checkout">Your Cart</h3>
 
                         @foreach($cart->items as $item)
                         <div class="basket-item">
@@ -166,7 +148,6 @@
                         </div>
                         @endforeach
 
-                        <div class="cart-summary-divider"></div>
 
                         <div class="cart-summary-row">
                             <span>Subtotal</span>
@@ -184,14 +165,13 @@
                         <button type="submit" class="btn btn-primary btn-full btn-lg"
                                 style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;">
                             Confirm Order for Pickup
-                            <i class="fas fa-arrow-right"></i>
                         </button>
 
-                        <div class="basket-notify">
-                            <i class="fas fa-bell" style="color:var(--amber);font-size:.85rem;flex-shrink:0;margin-top:2px;"></i>
-                            <span>You will receive an SMS and email notification when your order is ready for collection.</span>
+                        <div class="basket-notify" style="display:flex;justify-content:center;align-items:center;">
+                            <span>You will receive an SMS and email notification when
+your order is ready for collection.</span>
                         </div>
-                    </div>
+                    
                 </div>
 
             </div>

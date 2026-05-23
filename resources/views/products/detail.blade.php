@@ -149,7 +149,7 @@
                         </form>
 
                         {{-- BUY NOW --}}
-                        <form action="{{ route('checkout.payment') }}" method="POST">
+                        <form action="{{ route('checkout') }}" method="POST">
     @csrf
 
     <input type="hidden" name="buy_now" value="1">

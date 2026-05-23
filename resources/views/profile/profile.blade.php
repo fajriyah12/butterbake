@@ -33,19 +33,11 @@
         <aside class="profile-sidebar">
 
             <a href="{{ route('profile.index') }}" class="profile-menu ">
-
-                <i class="fas fa-user"></i>
-
                 <span>Profile</span>
-
             </a>
 
             <a href="{{ route('order.myorders') }}" class="profile-menu">
-
-                <i class="fas fa-box"></i>
-
                 <span>Orders</span>
-
             </a>
 
             <div class="sidebar-line"></div>
@@ -54,9 +46,6 @@
                 @csrf
 
                 <button type="submit" class="profile-menu logout-btn">
-
-                    <i class="fas fa-sign-out-alt"></i>
-
                     <span>Logout</span>
 
                 </button>
@@ -73,11 +62,7 @@
                 <h2>Personal Information</h2>
 
                 <a href="{{ route('profile.edit') }}">
-
-                    <i class="fas fa-pen"></i>
-
                     Edit Details
-
                 </a>
 
             </div>
@@ -128,33 +113,17 @@
             <div class="location-wrapper">
 
                 <div class="location-card">
-
-                    <span class="primary-badge">
-                        PRIMARY
-                    </span>
-
-                    <h3>Heritage District Bakery</h3>
+                    <h3>Butter Bake</h3>
 
                     <p>
-                        124 Baker’s Lane, Old Town District.
-                        Just around the corner from the clock tower.
+                        Jl. Kopi Arabica No.121, Kedaton 
+                        Bandar Lampung, Lampung 31141.
                     </p>
 
                     
 
                 </div>
 
-                <div class="add-location">
-
-                    <i class="fas fa-map-marker-alt"></i>
-
-                    <h4>Add New Location</h4>
-
-                    <p>
-                        Save a new bakery for faster checkout
-                    </p>
-
-                </div>
 
             </div>
 

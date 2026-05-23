@@ -4,21 +4,21 @@
 @section('content')
 
 <div class="page-header">
-    <div class="container">
-        <h1 class="page-header-title">Your Basket</h1>
+    <div class="container" style="max-width:100%; margin:0; padding:0px 40px;">
+        <h1 class="page-header-title">Your Cart</h1>
         <p class="page-header-subtitle">{{ $cart->items->count() }} items in cart</p>
     </div>
 </div>
 
-<div class="section" style="padding-top:48px;">
-    <div class="container">
+<div class="section" style="padding-top:25px;">
+    <div class="container" style="max-width:100%; margin:0; padding:0 40px;">
         @if($cart->items->isEmpty())
             <div class="empty-state">
-                <div class="empty-state-icon"><i class="fas fa-shopping-basket"></i></div>
+                <div class="empty-state-icon"></div>
                 <h3 class="empty-state-title">Your Cart is Empty </h3>
                 <p class="empty-state-desc">Let's start shopping and discover our best products</p>
                 <a href="{{ route('catalog.index') }}" class="empty-cart-btn">
-                    <i class="fas fa-bread-slice"></i> Start Shopping
+                    Start Shopping
                 </a>
             </div>
         @else
@@ -36,10 +36,6 @@
                         </div>
 
                         @foreach($cart->items as $item)
-                            {{--
-                                Setiap baris diberi data-item-id agar JS bisa
-                                menemukan form UPDATE dan form DELETE dengan tepat
-                            --}}
                             <div class="cart-row" data-item-id="{{ $item->id }}">
 
                                 {{-- Produk --}}
@@ -71,7 +67,6 @@
                                     @csrf
                                     @method('PATCH')
                                     <div class="quantity-selector" style="display:flex;align-items:center;">
-                                        {{-- Tombol − : kalau qty=1 akan trigger hapus --}}
                                         <button type="button"
                                                 class="qty-btn"
                                                 onclick="handleDec(this)">−</button>
@@ -95,7 +90,7 @@
                                     Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}
                                 </div>
 
-                                {{-- Hapus — form DELETE, disembunyikan --}}
+                                {{-- Hapus — form DELETE --}}
                                 <form class="form-delete"
                                       method="POST"
                                       action="{{ route('cart.remove', $item) }}"
@@ -116,7 +111,7 @@
                     </div>
 
                     <div style="margin-top:20px;">
-                        <a href="{{ route('catalog.index') }}" class="btn btn-ghost">
+                        <a href="{{ route('catalog.index') }}" class="btn btn-ghost"style ="display:inline-flex;
                             <i class="fas fa-arrow-left"></i> Continue Shopping
                         </a>
                     </div>
@@ -146,12 +141,10 @@
                     <a href="{{ route('checkout') }}"
                        class="btn btn-primary btn-full btn-lg"
                        style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
-                        Proceed to Checkout
-                        <i class="fas fa-arrow-right"></i>
+                        Proceed to Checkout</i>
                     </a>
 
                     <div style="margin-top:16px;text-align:center;font-size:.8rem;color:var(--text-light);">
-                        <i class="fas fa-shield-alt" style="color:var(--amber)"></i>
                         Secure & Trusted Transactions
                     </div>
                 </div>
@@ -163,9 +156,7 @@
 
 @push('scripts')
 <script>
-
 function handleDec(btn) {
-    // Naik ke .cart-row yang punya data-item-id
     const row        = btn.closest('.cart-row');
     const formUpdate = row.querySelector('.form-update');
     const formDelete = row.querySelector('.form-delete');
@@ -174,15 +165,12 @@ function handleDec(btn) {
     let val = parseInt(input.value);
 
     if (val > 1) {
-
         input.value = val - 1;
         formUpdate.submit();
     } else {
-
         formDelete.submit();
     }
 }
-
 
 function handleInc(btn) {
     const row        = btn.closest('.cart-row');

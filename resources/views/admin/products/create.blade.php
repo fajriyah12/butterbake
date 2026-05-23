@@ -7,7 +7,9 @@
     <div class="inventory-header">
         <div>
             <h1>Add New Product</h1>
-            <p class="inventory-subtitle">Fill in the details below to add a new product.</p>
+            <p class="inventory-subtitle">
+                Fill in the details below to add a new product.
+            </p>
         </div>
     </div>
 
@@ -22,6 +24,7 @@
             <!-- LEFT SIDE -->
             <div>
 
+                <!-- PRODUCT NAME -->
                 <div class="form-group">
                     <label>Product Name</label>
                     <input type="text"
@@ -31,20 +34,22 @@
                            required>
                 </div>
 
+                <!-- DESCRIPTION -->
                 <div class="form-group">
                     <label>Description</label>
                     <textarea name="description"
                               placeholder="Describe the texture, ingredients, and baking process...">{{ old('description') }}</textarea>
                 </div>
 
+                <!-- INGREDIENTS -->
                 <div class="form-group">
                     <label>Ingredients</label>
                     <textarea name="ingredients"
                               placeholder="e.g. Flour, butter, eggs, sea salt...">{{ old('ingredients') }}</textarea>
                 </div>
 
+                <!-- PRICE + STOCK -->
                 <div class="row">
-
                     <div class="form-group">
                         <label>Price (Rp)</label>
                         <div class="price-wrapper">
@@ -56,7 +61,6 @@
                                    required>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label>Initial Stock Quantity</label>
                         <input type="number"
@@ -65,11 +69,10 @@
                                placeholder="0"
                                required>
                     </div>
-
                 </div>
 
+                <!-- RATING + REVIEW -->
                 <div class="row">
-
                     <div class="form-group">
                         <label>Rating (0.0 – 5.0)</label>
                         <input type="number"
@@ -80,7 +83,6 @@
                                min="0"
                                max="5">
                     </div>
-
                     <div class="form-group">
                         <label>Review Count</label>
                         <input type="number"
@@ -89,11 +91,17 @@
                                placeholder="0"
                                min="0">
                     </div>
-
                 </div>
 
+                <!-- CATEGORY -->
                 <div class="form-group">
-                    <label>Category</label>
+                    <div class="category-head">
+                        <label>Category</label>
+                        <a href="{{ route('admin.categories.create') }}" class="add-category-btn">
+                            <i class="fa-solid fa-plus"></i> Add Category
+                        </a>
+                    </div>
+
                     <div class="select-wrapper">
                         <select name="category_id" required>
                             <option value="">Select Category</option>
@@ -105,29 +113,38 @@
                             @endforeach
                         </select>
                     </div>
+
                 </div>
 
-                <p class="section-label" style="margin-top:8px;">Visibility Settings</p>
+                <!-- VISIBILITY -->
+                <p class="section-label" style="margin-top:8px;">
+                    Visibility Settings
+                </p>
 
+                <!-- FEATURED -->
                 <label class="toggle-card">
                     <div class="toggle-card-text">
                         <strong>Featured Product</strong>
                         <span>Highlight this on the storefront homepage.</span>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" name="is_featured"
+                        <input type="checkbox"
+                               name="is_featured"
                                {{ old('is_featured') ? 'checked' : '' }}>
                         <span class="slider"></span>
                     </label>
                 </label>
 
+                <!-- ACTIVE -->
                 <label class="toggle-card">
                     <div class="toggle-card-text">
                         <strong>Active Product</strong>
                         <span>Make this product visible to customers.</span>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" name="is_active" checked>
+                        <input type="checkbox"
+                               name="is_active"
+                               checked>
                         <span class="slider"></span>
                     </label>
                 </label>
@@ -139,7 +156,9 @@
 
                 <p class="section-label">Product Photography</p>
 
-                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('imageInput').click()">
+                <div class="upload-zone"
+                     id="uploadZone"
+                     onclick="document.getElementById('imageInput').click()">
 
                     <input type="file"
                            id="imageInput"
@@ -151,28 +170,44 @@
                     <img id="imagePreview"
                          src=""
                          alt="Preview"
-                         style="display:none; width:100%; height:220px; object-fit:cover; border-radius:10px; margin-bottom:8px;">
+                         style="display:none;
+                                width:100%;
+                                height:220px;
+                                object-fit:cover;
+                                border-radius:10px;
+                                margin-bottom:8px;">
 
                     <div id="uploadPlaceholder">
                         <div class="upload-icon">
                             <i class="fa-regular fa-camera"></i>
                         </div>
                         <p>Drop your imagery here</p>
-                        <small>High-resolution JPG or PNG.<br>Natural lighting preferred for an artisanal aesthetic.</small>
+                        <small>
+                            High-resolution JPG or PNG.<br>
+                            Natural lighting preferred for an artisanal aesthetic.
+                        </small>
                     </div>
 
                     <div id="changePhotoLabel" style="display:none; margin-top:6px;">
-                        <small style="color:#888;"><i class="fa-solid fa-rotate"></i> Click to change photo</small>
+                        <small style="color:#888;">
+                            <i class="fa-solid fa-rotate"></i>
+                            Click to change photo
+                        </small>
                     </div>
 
                 </div>
 
+                <!-- QUALITY -->
                 <div class="quality-card">
                     <div class="qc-title">
                         <i class="fa-solid fa-circle-info"></i>
                         Quality Standard
                     </div>
-                    <p>"Every product added to Butter Bake must reflect our commitment to slow fermentation and premium Grade-A ingredients."</p>
+                    <p>
+                        "Every product added to Butter Bake must reflect
+                        our commitment to slow fermentation and premium
+                        Grade-A ingredients."
+                    </p>
                 </div>
 
             </div>
@@ -187,6 +222,7 @@
 
     </form>
 
+    <!-- ERROR -->
     @if ($errors->any())
         <div class="error-box">
             <ul>
@@ -203,14 +239,13 @@
     function previewImage(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function (e) {
             const preview = document.getElementById('imagePreview');
             preview.src = e.target.result;
             preview.style.display = 'block';
             document.getElementById('uploadPlaceholder').style.display = 'none';
-            document.getElementById('changePhotoLabel').style.display = 'block';
+            document.getElementById('changePhotoLabel').style.display  = 'block';
         };
         reader.readAsDataURL(file);
     }

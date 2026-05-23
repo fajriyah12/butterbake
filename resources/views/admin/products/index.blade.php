@@ -1,20 +1,40 @@
 @extends('layouts.app')
-
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 @section('content')
 <div class="admin-main">
 
     <!-- TOPBAR -->
-    <div class="topbar">
-        <div class="inventory-header">
-            <div>
-                <h1>Product Inventory</h1>
-                <p class="inventory-subtitle">Showing all your artisanal creations</p>
-            </div>
-            <a href="{{ route('admin.products.create') }}" class="new-product-btn">
-                <i class="bi bi-plus-lg"></i> New Product
-            </a>
-        </div>
+    <div class="inventory-header">
+
+    <div>
+        <h1>Product Inventory</h1>
+
+        <p class="inventory-subtitle">
+            Showing all your artisanal creations
+        </p>
     </div>
+
+    <div class="header-actions">
+
+        <a href="{{ route('admin.categories.index') }}"
+           class="category-btn">
+
+            <i class="bi bi-plus-lg"></i>
+            Categories
+
+        </a>
+
+        <a href="{{ route('admin.products.create') }}"
+           class="new-product-btn">
+
+            <i class="bi bi-plus-lg"></i>
+            New Product
+
+        </a>
+
+    </div>
+
+</div>
 
     <!-- FILTER -->
     <form method="GET" action="{{ route('admin.products.index') }}" class="filter-form">
@@ -145,4 +165,57 @@
     </div>
 
 </div>
+{{-- TOAST POPUP --}}
+@if(session('success') || session('delete'))
+
+@php
+    $isDelete = session('delete');
+@endphp
+
+<div id="toast-success"
+     class="toast-success {{ $isDelete ? 'toast-delete' : '' }}">
+
+    <div class="toast-icon">
+
+        @if($isDelete)
+            <i class="fa-solid fa-xmark"></i>
+        @else
+            <i class="fa-solid fa-circle-check"></i>
+        @endif
+
+    </div>
+
+    <div class="toast-content">
+
+        <h4>{{ session('title') }}</h4>
+
+        <p>{{ session('message') }}</p>
+
+    </div>
+
+    <button class="toast-close" onclick="closeToast()">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+</div>
+
+<script>
+    function closeToast() {
+        const toast = document.getElementById('toast-success');
+
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(120%)';
+
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }
+
+    setTimeout(() => {
+        closeToast();
+    }, 4000);
+</script>
+
+@endif
+
 @endsection

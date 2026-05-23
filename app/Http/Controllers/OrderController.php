@@ -23,27 +23,50 @@ class OrderController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function checkout()
-    {
-        $cart = Cart::where('user_id', Auth::id())
-            ->with('items.product')
-            ->first();
+    public function checkout(Request $request)
+{
+    // BUY NOW
+    if ($request->has('buy_now')) {
 
-        if (!$cart || $cart->items->isEmpty()) {
+        $product = Product::findOrFail($request->product_id);
 
-            return redirect()
-                ->route('cart.index')
-                ->with(
-                    'error',
-                    'Keranjang Anda kosong.'
-                );
-        }
+        $cart = new \stdClass();
 
+        $item = new \stdClass();
+
+        $item->product = $product;
+        $item->quantity = $request->quantity ?? 1;
+
+        $cart->items = collect([$item]);
+
+        $cart->total = 
+        $product->price * $item->quantity;
         return view(
             'checkout.checkout',
             compact('cart')
         );
     }
+
+    // NORMAL CART
+    $cart = Cart::where('user_id', Auth::id())
+        ->with('items.product')
+        ->first();
+
+    if (!$cart || $cart->items->isEmpty()) {
+
+        return redirect()
+            ->route('cart.index')
+            ->with(
+                'error',
+                'Keranjang Anda kosong.'
+            );
+    }
+
+    return view(
+        'checkout.checkout',
+        compact('cart')
+    );
+}
 
     /*
     |--------------------------------------------------------------------------

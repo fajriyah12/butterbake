@@ -55,7 +55,6 @@
                             <th>Date</th>
                             <th>Total</th>
                             <th>Status</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,12 +71,6 @@
                                     <span class="status status-{{ $order->status }}">
                                         {{ strtoupper($order->status) }}
                                     </span>
-                                </td>
-                                <td>
-                                    <a href="{{ route('admin.orders.show', $order->id) }}"
-                                       class="page-btn" title="View Order">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
                                 </td>
                             </tr>
                         @empty

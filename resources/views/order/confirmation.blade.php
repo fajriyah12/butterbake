@@ -4,7 +4,7 @@
 @section('content')
 
 <div style="background:#f7efe9;min-height:100vh;padding-bottom:80px;">
-    <div class="container" style="padding-top:40px;">
+    <div class="container" style="max-width:100%; margin:0; padding:40px 40px 0;">
 
         {{-- SUCCESS BADGE --}}
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
@@ -19,7 +19,7 @@
         {{-- HERO --}}
         <div class="confirm-hero">
             <div>
-                <h1 class="confirm-title">Thank You for<br>Your Order!</h1>
+                <h1 class="confirm-title">Thank You for Your Order!</h1>
                 <p class="confirm-desc">
                     We've received your order. Please complete the payment using the method below.
                 </p>
@@ -68,8 +68,8 @@
                     </div>
                 </div>
 
-                {{-- STATUS BOX (FIX REPLACE POPUP BUTTON) --}}
-                <div style="margin-top:20px;padding:14px 16px;background:#fff3e6;border:1px solid #f0d2b6;border-radius:12px;">
+                {{-- STATUS BOX --}}
+                <div class="confirm-status-box">
                     <div style="font-weight:700;color:#9b5a28;margin-bottom:6px;">
                         Payment Pending Verification
                     </div>
@@ -119,7 +119,7 @@
                 <div class="confirm-pickup">
                     @if($order->pickup_date)
                     <div class="confirm-pickup-row">
-                        <span><i class="fas fa-clock" style="color:#9b5a28;margin-right:8px;"></i>Pickup Time</span>
+                        <span></i>Pickup Time</span>
                         <span>{{ $order->pickup_date }}</span>
                     </div>
                     @endif
@@ -135,12 +135,12 @@
                 {{-- BACK BUTTON + STATUS ORDER --}}
                 <div class="confirm-btn-group">
                     <a href="{{ route('home') }}" class="confirm-back-btn">
-                    Back to Home
+                        Back to Home
                     </a>
                     <a href="{{ route('order.show', $order->id) }}" class="confirm-status-btn">
-                    <i class="fas fa-receipt"></i> Status Order
-                 </a>
-            </div>
+                        Status Order
+                    </a>
+                </div>
 
             </div>
 
@@ -148,39 +148,38 @@
             <div class="confirm-card">
 
                 <h3 class="confirm-instructions-title">
-                    <i class="fas fa-question-circle" style="color:#9b5a28;"></i>
                     Payment Instructions
                 </h3>
 
                 @php
-                    $m = $order->payment_method ?? '';
+                $m = $order->payment_method ?? '';
 
-                    if(str_contains($m,'bca')) $steps = [
-                        "Open m-BCA or KlikBCA",
-                        "Go to Transfer → Virtual Account",
-                        "Enter number and confirm payment"
-                    ];
-                    elseif(str_contains($m,'bni')) $steps = [
-                        "Open BNI Mobile Banking",
-                        "Select Transfer → Virtual Account",
-                        "Confirm payment"
-                    ];
-                    elseif(str_contains($m,'bri')) $steps = [
-                        "Open BRImo",
-                        "Select BRIVA payment",
-                        "Confirm transaction"
-                    ];
-                    elseif(str_contains($m,'mandiri')) $steps = [
-                        "Open Livin' Mandiri",
-                        "Select payment menu",
-                        "Confirm transfer"
-                    ];
-                    else $steps = [
-                        "Complete payment using selected method",
-                        "Wait for admin verification",
-                        "Order will be processed after confirmation"
-                    ];
-                @endphp
+                if(str_contains($m,'bca')) $steps = [
+                    "Open your m-BCA app or log in to KlikBCA and navigate to the Transfer menu.",
+                    "Select BCA Virtual Account and enter the account number provided above.",
+                    "Verify the transaction details, enter your PIN, and save the payment receipt."
+                ];
+                elseif(str_contains($m,'bni')) $steps = [
+                    "Open BNI Mobile Banking app and log in to your account.",
+                    "Select Transfer Virtual Account and enter the BNI VA number provided above.",
+                    "Confirm the payment details, enter your PIN, and save the transaction receipt."
+                ];
+                elseif(str_contains($m,'bri')) $steps = [
+                "Open BRImo app and log in with your BRI account credentials.",
+                "Select BRIVA menu and enter the Virtual Account number provided above.",
+                "Check the payment details carefully, enter your PIN, and complete the transaction."
+                ];
+                elseif(str_contains($m,'mandiri')) $steps = [
+                "Open Livin' by Mandiri app and log in to your account.",
+                "Select Transfer To Mandiri Virtual Account and enter the number above.",
+                "Review the payment details, enter your PIN, and save the confirmation receipt."
+                ];
+                else $steps = [
+                "Complete the payment using your selected payment method.",
+                "Wait for admin verification — this usually takes a few minutes.",
+                "You will receive an email and SMS notification once your order is confirmed."
+                ];
+            @endphp
 
                 <div class="confirm-steps">
                     @foreach($steps as $i => $step)
@@ -202,7 +201,9 @@
                     </div>
                     @endforeach
 
-                    <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:10px;">
+                    <div style="height:1px;background:#f0e4d8;margin:12px 0;"></div>
+
+                    <div style="display:flex;justify-content:space-between;font-weight:700;">
                         <span>Total</span>
                         <span>Rp {{ number_format($order->total,0,',','.') }}</span>
                     </div>
@@ -215,7 +216,6 @@
     </div>
 </div>
 
-{{-- SCRIPT --}}
 @push('scripts')
 <script>
 function copyVA(){
