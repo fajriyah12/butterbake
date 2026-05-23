@@ -24,49 +24,50 @@ class OrderController extends Controller
     */
 
     public function checkout(Request $request)
-{
-    // BUY NOW
-    if ($request->has('buy_now')) {
+    {
+        // BUY NOW
+        if ($request->has('buy_now')) {
 
-        $product = Product::findOrFail($request->product_id);
+            $product = Product::findOrFail($request->product_id);
 
-        $cart = new \stdClass();
+            $cart = new \stdClass();
 
-        $item = new \stdClass();
+            $item = new \stdClass();
 
-        $item->product = $product;
-        $item->quantity = $request->quantity ?? 1;
+            $item->product = $product;
+            $item->quantity = $request->quantity ?? 1;
 
-        $cart->items = collect([$item]);
+            $cart->items = collect([$item]);
 
-        $cart->total = 
-        $product->price * $item->quantity;
+            $cart->total =
+                $product->price * $item->quantity;
+
+            return view(
+                'checkout.checkout',
+                compact('cart')
+            );
+        }
+
+        // NORMAL CART
+        $cart = Cart::where('user_id', Auth::id())
+            ->with('items.product')
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+
+            return redirect()
+                ->route('cart.index')
+                ->with(
+                    'error',
+                    'Keranjang Anda kosong.'
+                );
+        }
+
         return view(
             'checkout.checkout',
             compact('cart')
         );
     }
-
-    // NORMAL CART
-    $cart = Cart::where('user_id', Auth::id())
-        ->with('items.product')
-        ->first();
-
-    if (!$cart || $cart->items->isEmpty()) {
-
-        return redirect()
-            ->route('cart.index')
-            ->with(
-                'error',
-                'Keranjang Anda kosong.'
-            );
-    }
-
-    return view(
-        'checkout.checkout',
-        compact('cart')
-    );
-}
 
     /*
     |--------------------------------------------------------------------------
@@ -76,7 +77,6 @@ class OrderController extends Controller
 
     public function payment(Request $request)
     {
-
         /*
         |--------------------------------------------------------------------------
         | BUY NOW
@@ -95,28 +95,28 @@ class OrderController extends Controller
 
             $item->product = $product;
 
-           $item->quantity =
-           $request->quantity ?? 1;
+            $item->quantity =
+                $request->quantity ?? 1;
 
-           $cart->items = collect([$item]);
+            $cart->items = collect([$item]);
 
-/*
-|--------------------------------------------------------------------------
-| SAVE BUY NOW TO SESSION
-|--------------------------------------------------------------------------
-*/
+            /*
+            |--------------------------------------------------------------------------
+            | SAVE BUY NOW TO SESSION
+            |--------------------------------------------------------------------------
+            */
 
-session([
-    'buy_now' => [
-        'product_id' => $product->id,
-        'quantity' => $request->quantity ?? 1,
-    ]
-]);
+            session([
+                'buy_now' => [
+                    'product_id' => $product->id,
+                    'quantity' => $request->quantity ?? 1,
+                ]
+            ]);
 
-return view(
-    'checkout.payment',
-    compact('cart')
-);
+            return view(
+                'checkout.payment',
+                compact('cart')
+            );
         }
 
         /*
@@ -194,7 +194,6 @@ return view(
 
     public function placeOrder(Request $request)
     {
-
         /*
         |--------------------------------------------------------------------------
         | VALIDATION
@@ -210,37 +209,42 @@ return view(
 
         /*
         |--------------------------------------------------------------------------
-        | GET CART
+        | GET CART / BUY NOW
         |--------------------------------------------------------------------------
         */
+
         $buyNow = session('buy_now');
 
-         if ($buyNow) {
+        if ($buyNow) {
 
-         $product = Product::findOrFail(
-         $buyNow['product_id']
-        );
+            $product = Product::findOrFail(
+                $buyNow['product_id']
+            );
 
-         $cart = new \stdClass();
+            $cart = new \stdClass();
 
-         $item = new \stdClass();
+            $item = new \stdClass();
 
-         $item->product = $product;
+            $item->product = $product;
 
-         $item->product_id = $product->id;
+            $item->product_id = $product->id;
 
-         $item->quantity = $buyNow['quantity'];
+            $item->quantity = $buyNow['quantity'];
 
-         $cart->items = collect([$item]);
+            $item->price = $product->price;
+
+            $item->subtotal =
+                $product->price * $item->quantity;
+
+            $cart->items = collect([$item]);
 
         } else {
 
-         $cart = Cart::where('user_id', Auth::id())
-        ->with('items.product')
-        ->first();
-         }
+            $cart = Cart::where('user_id', Auth::id())
+                ->with('items.product')
+                ->first();
+        }
 
-        
         $checkout = session('checkout_data', []);
 
         if (!$cart || $cart->items->isEmpty()) {
@@ -301,12 +305,6 @@ return view(
 
                 'order_number' =>
                     Order::generateOrderNumber(),
-
-                /*
-                |--------------------------------------------------------------------------
-                | ORDER STATUS
-                |--------------------------------------------------------------------------
-                */
 
                 'status' => 'pending',
 
@@ -392,7 +390,7 @@ return view(
                         $order->id,
 
                     'product_id' =>
-                        $item->product_id,
+                        $item->product->id,
 
                     'product_name' =>
                         $item->product->name,
@@ -436,26 +434,24 @@ return view(
             | CLEAR CART
             |--------------------------------------------------------------------------
             */
-              if (!$buyNow) {
 
-              $cart->items()->delete();
+            if (!$buyNow) {
 
-              $cart->update([
-              'total' => 0
-               ]);
-             }
+                $cart->items()->delete();
+
+                $cart->update([
+                    'total' => 0
+                ]);
+            }
+
             /*
             |--------------------------------------------------------------------------
             | CLEAR SESSION
             |--------------------------------------------------------------------------
             */
 
-            session()->forget(
-                'checkout_data'
-            );
-            session()->forget(
-                'buy_now'
-            );
+            session()->forget('checkout_data');
+            session()->forget('buy_now');
 
             session([
                 'last_order_id' =>
@@ -502,28 +498,14 @@ return view(
     {
         $order = Order::findOrFail($id);
 
-        /*
-        |--------------------------------------------------------------------------
-        | CHECK ORDER OWNER
-        |--------------------------------------------------------------------------
-        */
-
         if ($order->user_id != Auth::id()) {
 
             abort(403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PAYMENT STATUS
-        |--------------------------------------------------------------------------
-        */
+        $order->status = 'pending';
 
-        $order->status =
-            'pending';
-
-        $order->payment_status =
-            'checking';
+        $order->payment_status = 'checking';
 
         $order->save();
 
