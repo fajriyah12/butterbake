@@ -9,7 +9,7 @@
     <div class="locations-header">
         <span>VISIT OUR BAKERY</span>
 
-        <h1>Our Neighborhood Nook.</h1>
+        <h1>Where to Find Us</h1>
 
         <p>
             Discover Butter Bake flagship store, where artisan pastries
@@ -51,7 +51,7 @@
                 </div>
 
                 <a href="#" class="location-btn">
-                    Get Directions →
+                    Get Directions 
                 </a>
 
             </div>

@@ -1369,6 +1369,7 @@ input:checked + .slider::before { transform: translateX(20px); }
 /* =======================
    ORDER DETAIL PAGE
 ======================= */
+
 .order-title {
     font-size: 34px;
     font-weight: 700;
@@ -1881,4 +1882,191 @@ input:checked + .slider::before { transform: translateX(20px); }
 .delete-btn,
 .delete-btn i {
     color: #dc2626 !important;
+}
+
+.order-grid{
+    display:grid;
+    grid-template-columns: 2fr 1fr;
+    gap:24px;
+    margin-top:30px;
+}
+
+.card-box{
+    background:#fff;
+    border-radius:20px;
+    padding:28px;
+    margin-bottom:24px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.03);
+}
+
+.inventory-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.order-title{
+    font-size:42px;
+    font-weight:700;
+    color:#6b4328;
+}
+
+.breadcrumb{
+    color:#999;
+    margin-bottom:10px;
+}
+
+.status-form{
+    display:flex;
+    gap:12px;
+}
+
+.status-select,
+.payment-status-select{
+    border:none;
+    border-radius:30px;
+    padding:12px 18px;
+    background:#edf3ea;
+    font-weight:600;
+}
+
+.btn-primary{
+    background:#8b5a35;
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:30px;
+    font-weight:600;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.item-badge{
+    background:#f4e8df;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.order-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.order-table th{
+    text-align:left;
+    color:#999;
+    font-size:13px;
+    padding-bottom:18px;
+}
+
+.order-table td{
+    padding:18px 0;
+    border-top:1px solid #f1f1f1;
+}
+
+.product-info{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.order-item-img{
+    width:65px;
+    height:65px;
+    border-radius:12px;
+    object-fit:cover;
+}
+
+.notes-box{
+    margin-top:15px;
+    background:#fdf4ee;
+    padding:28px;
+    border-radius:14px;
+    text-align:center;
+    color:#999;
+}
+
+.customer-info{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.avatar{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#8b5a35;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.member-badge{
+    background:#e7efe6;
+    color:#4f7c4f;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.detail-item{
+    margin-bottom:20px;
+}
+
+.detail-item strong{
+    display:block;
+    margin-bottom:5px;
+    color:#777;
+    text-transform:uppercase;
+    font-size:12px;
+}
+
+.payment-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.payment-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:16px;
+}
+
+.total-row{
+    font-size:24px;
+    font-weight:700;
+    margin-top:20px;
+}
+
+.receipt-btn{
+    width:100%;
+    border:none;
+    padding:15px;
+    border-radius:14px;
+    margin-top:25px;
+    background:#f3e2d4;
+    font-weight:600;
+}
+
+.payment-method{
+    background:#f6eee7;
+    color:#8b5a35;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
 }

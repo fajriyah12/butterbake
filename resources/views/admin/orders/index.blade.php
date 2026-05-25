@@ -90,24 +90,6 @@
                             <i class="bi bi-eye"></i>
                         </a>
 
-                        <!-- UPDATE STATUS -->
-                        @if($order->status !== 'completed')
-
-                        <form method="POST"
-                            action="{{ route('admin.orders.update',$order) }}">
-
-                            @csrf
-                            @method('PATCH')
-
-                    
-                        </form>
-
-                        @else
-                            <span style="color:green;font-weight:600;">
-                                Done
-                            </span>
-                        @endif
-
                     </td>
 
                 </tr>

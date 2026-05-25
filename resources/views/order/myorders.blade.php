@@ -57,7 +57,7 @@
                     <div class="myorder-info">
                         <span>Payment Method</span>
                         <h4>
-                            {{ strtoupper($order->payment_method) }}
+                            {{ strtoupper(str_replace('_', ' ', $order->payment_method)) }}
                         </h4>
                     </div>
 

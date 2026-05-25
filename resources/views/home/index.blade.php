@@ -5,7 +5,7 @@
 <!-- HERO SECTION -->
 <section class="hero-section">
     <div class="hero-content">
-        <span class="year-badge">EST. 1924</span>
+        <span class="year-badge">EST. 2012</span>
         <h1>
             Handcrafted Daily, <br>
             <span>With Heritage Grain.</span>
@@ -37,21 +37,21 @@
     </div>
     <div class="explore-grid">
         <div class="explore-card cake-card">
-            <img src="{{ asset('images/cakes.jpeg') }}">
+            <img src="{{ asset('images/displaycake.jpg') }}">
             <div class="overlay">
                 <h3>Cakes</h3>
                 <p>Celebration layers and petite gateaux.</p>
             </div>
         </div>
         <div class="explore-card pastry-card">
-            <img src="{{ asset('images/patries.png') }}">
+            <img src="{{ asset('images/buttercroissant.jpg') }}">
             <div class="overlay">
                 <h3>Pastries</h3>
                 <p>Buttery, flaky, and golden perfection.</p>
             </div>
         </div>
         <div class="explore-card wide">
-            <img src="{{ asset('images/bread.png') }}">
+            <img src="{{ asset('images/dailybreads.jpg') }}">
             <div class="overlay">
                 <h3>Daily Breads</h3>
                 <p>Ancient grains and sourdough fermented for 48 hours.</p>
@@ -113,13 +113,13 @@
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="favorite-btn">
-                            🛒 ADD TO CART
+                            ADD TO CART
                         </button>
                     </form>
                 @else
                     {{-- Belum login: arahkan ke login --}}
                     <a href="{{ route('login') }}" class="favorite-btn">
-                        🛒 ADD TO CART
+                        ADD TO CART
                     </a>
                 @endauth
             </div>
@@ -131,16 +131,16 @@
 <!-- PROCESS SECTION -->
 <section class="process-section">
     <div class="process-image-wrapper">
-        <img src="{{ asset('images/store.png') }}" class="process-image">
+        <img src="{{ asset('images/butterbakestore.jpg') }}" class="process-image">
         <div class="pickup-card">
             <div class="pickup-top">
-                <div class="pickup-icon">🕒</div>
+                <div class="pickup-icon"><i class="fa-regular fa-clock"></i></div>
                 <div>
                     <h4>Pickup Hours</h4>
-                    <span>Daily 7am — 2pm</span>
+                    <span>Daily 10am — 2pm</span>
                 </div>
             </div>
-            <p>Fresh batches come out at 7am and 10:30am daily.</p>
+            <p>Fresh batches come out at 7am and 12:30am daily.</p>
         </div>
     </div>
 

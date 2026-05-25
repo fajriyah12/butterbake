@@ -7,7 +7,7 @@
 {{-- HERO --}}
 <section class="story-hero">
 
-    <img src="{{ asset('images/stroy-hero.png') }}">
+    <img src="{{ asset('images/dailybreads.jpg') }}">
 
     <div class="story-overlay">
 
@@ -64,9 +64,9 @@
 
     <div class="grain-images">
 
-        <img src="{{ asset('images/grain1.png') }}">
+        <img src="{{ asset('images/gandum.jpg') }}">
 
-        <img src="{{ asset('images/grain2.png') }}">
+        <img src="{{ asset('images/tepung.png') }}">
 
     </div>
 
@@ -77,12 +77,12 @@
 
     <div class="section-center">
 
-        <h2>The Art of Slower Fermentation</h2>
+        <h2>The Art of Premium Butter Bake</h2>
 
         <p>
-            While the world rushed, we slowed down.
-            Every loaf at Artisan Crumbs undergoes a meticulous
-            36-hour cold fermentation process.
+            While others compromise on ingredients, we elevate the craft. 
+            Every pastry at Butter Bake undergoes a meticulous lamination and chilling process using 100% pure European 
+            cultured butter to unlock peak richness, flaky layers, and an unforgettable melt-in-your-mouth texture.
         </p>
 
     </div>
@@ -91,39 +91,47 @@
 
         <div class="ferment-card">
 
-            <div class="ferment-icon">☀️</div>
-
+            <div class="ferment-icon">
+                <i class="fa-regular fa-sun"></i>
+            </div>
             <h3>01. Temperature Control</h3>
 
             <p>
-                Precision chilling allows natural
-                development and flavor.
+                Precision chilling ensures our 
+                premium butter stays perfectly solid within 
+                the dough layers before baking.
             </p>
 
         </div>
 
         <div class="ferment-card">
 
-            <div class="ferment-icon">🥖</div>
+            <div class="ferment-icon">
+                <i class="fa-solid fa-wind"></i>
+            </div>
 
-            <h3>02. Aeration & Fold</h3>
+            <h3>02. The Art of Lamination</h3>
 
             <p>
-                Hand folding every few hours
-                creates irresistible texture.
+                Hand-folding the dough creates 
+                hundreds of paper-thin layers for 
+                our signature flaky texture.
             </p>
 
         </div>
 
         <div class="ferment-card">
 
-            <div class="ferment-icon">🔥</div>
+            <div class="ferment-icon">
+                <i class="fa-solid fa-box"></i>
+            </div>
 
-            <h3>03. Stone Hearth Bake</h3>
+            <h3>03. Golden Caramelized Bake</h3>
 
             <p>
-                Fired in real stone hearth ovens,
-                creating crisp crusts.
+                High-temperature baking 
+                vaporizes the butter to puff up
+                the layers into a rich, golden crust.
             </p>
 
         </div>
@@ -135,29 +143,41 @@
 {{-- MISSION --}}
 <section class="mission-section">
 
-    <img src="{{ asset('images/baker.png') }}">
+    <img src="{{ asset('images/ourstory.jpg') }}">
 
     <div class="mission-content">
 
         <h2>
             Our Mission:
-            Conscious Craft
+            Crafting Excellence
         </h2>
 
         <p>
-            We believe a bakery should be a pillar
-            of its community. Our mission is to nourish
-            both body and spirit while supporting the farmers.
+            We believe that great bread and pastry have the power to brighten your day. Our mission is to serve the ultimate bakery experience by combining traditional baking techniques with the rich flavor of premium butter.
         </p>
+<div class="mission-list">
 
-        <div class="mission-list">
+    <div class="mission-item">
+        <h4>Freshly Baked Daily</h4>
 
-            <div>☑ Zero Waste Initiative</div>
+        <p>
+            We guarantee that all our breads and pastries
+            are baked fresh from the oven every morning
+            to deliver the perfect texture and aroma.
+        </p>
+    </div>
 
-            <div>☑ Plastic-Free Delivery</div>
+    <div class="mission-item">
+        <h4>Premium Ingredients Only</h4>
 
-        </div>
+        <p>
+            We strictly use 100% pure butter and
+            high-quality flour, ensuring no artificial
+            preservatives are ever added to our products.
+        </p>
+    </div>
 
+</div>
     </div>
 
 </section>
